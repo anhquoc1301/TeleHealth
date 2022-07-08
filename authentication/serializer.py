@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 class RegisrerSerializer(serializers.ModelSerializer):
     password=serializers.CharField(max_length=50, min_length=6, write_only=True)
-    # roler = serializers.CharField(max_length=30,required=True)
+    roler = serializers.CharField(max_length=30,required=True)
 
     class Meta:
         model =User
@@ -21,6 +21,7 @@ class RegisrerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('username includes both letters and numbers')
         return attrs
     def create(self, validated_data):
+        print(validated_data)
         return User.objects.create_user(**validated_data)
 
 
