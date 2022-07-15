@@ -39,20 +39,19 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
-    path('expenses/', include('expenses.urls')),
-    path('apartment/', include('apartment.urls')),
-    path('telehealthAPI/', include('company.urls')),
+    # path('expenses/', include('expenses.urls')),
+    # path('apartment/', include('apartment.urls')),
+    # path('telehealthAPI/', include('company.urls')),
     path('doctor/', include('doctor.urls')),
     path('patient/', include('patient.urls')),
     path('medical_bill/', include('medical_bill.urls')),
     path('medical_unit/', include('medical_unit.urls')),
     path('address/', include('address.urls')),
+    path('tlc/', include('tlc.urls')),
 
 
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
-
 ]

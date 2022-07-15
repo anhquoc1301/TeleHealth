@@ -79,15 +79,15 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser,PermissionsMixin):
     # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=255, unique=True, db_index=True)
-    # phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=15, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
-    ROLER_CHOISE = (
+    ROLE_CHOICE = (
         ("roler1", "Doctor"),
         ('roler2', "Patient"),
         ("roler3", "Medical Unit"),
         ("roler4", "Admin"),
     )
-    roler = models.CharField(max_length=30, choices=ROLER_CHOISE)
+    roler = models.CharField(max_length=30, choices=ROLE_CHOICE)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

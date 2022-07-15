@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'authentication',
-    'expenses',
-    'apartment',
-    'company',
+    # 'expenses',
+    # 'apartment',
+    # 'company',
     'doctor',
     'address',
     'patient',
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    'tlc',
 ]
 
 MIDDLEWARE = [
@@ -196,6 +197,9 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URLS = 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 AUTH_USER_MODEL = 'authentication.User'
 
