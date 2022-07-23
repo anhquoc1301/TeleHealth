@@ -40,7 +40,5 @@ class PatientManagementViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     def listPatientByDoctorId(self, request):
         doctor = Doctor.objects.get(user=request.user.id)
         patients = PatientManagement.objects.filter(doctor=doctor)
-        patientsSerializer=PatientSerializer(data=patients, many=True)
-        print('check')
-        print(patientsSerializer)
+        patientsSerializer=PatientManagementSerializer(patients, many=True)
         return Response(data=patientsSerializer.data, status=status.HTTP_200_OK)
