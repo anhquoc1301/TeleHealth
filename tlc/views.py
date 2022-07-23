@@ -11,6 +11,7 @@ from .utils import load_data
 class LoadFile(APIView):
     def post(self, request):
         request_user = request.user.id
+        patientId=request.data['patientId']
         print(request_user)
         id = request.user.id
         if request.method == "POST":
@@ -57,7 +58,7 @@ class LoadFile(APIView):
             output_path = working_path = 'test'
             # loop over the image files and store everything into a list
             right_mask, left_mask, volume, z = load_data(
-                Folder, userob, urlk)
+                Folder, patientId, urlk)
             # k1 = len(z)
             # h1 = 3 * k1
             # x1 = z[:, :, 0].reshape(-1)

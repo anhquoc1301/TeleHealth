@@ -18,7 +18,7 @@ class Doctor(models.Model):
     gender = models.CharField(choices=GENDER_CHOISE, max_length=20)
     unsignedName = models.CharField(max_length=200)
     medicalUnit = models.ForeignKey(MedicalUnit, on_delete=models.CASCADE, related_name='doctor')
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='doctor')
+    # address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='doctor')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="doctor")
 
     created_at = models.DateTimeField(auto_now_add=True)

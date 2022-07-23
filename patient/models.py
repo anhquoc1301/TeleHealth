@@ -14,7 +14,7 @@ class Patient(models.Model):
     gender = models.CharField(choices=GENDER_CHOISE, max_length=20)
     unsignedName = models.CharField(max_length=200)
     medicalUnit = models.ForeignKey(MedicalUnit, on_delete=models.CASCADE, related_name='patient')
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='patient')
+    # address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='patient')
     dateOfBirth = models.DateField()
     insuranceCode = models.CharField(max_length=20)
     identification = models.CharField(max_length=20)

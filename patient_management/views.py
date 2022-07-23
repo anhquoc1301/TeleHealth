@@ -1,3 +1,5 @@
+from doctor.models import Doctor
+from patient.serializers import PatientSerializer
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -29,3 +31,16 @@ class PatientManagementViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         "update": [Roler5],
         "destroy": [Roler3],
     }
+
+    @action(
+        methods=["GET"],
+        detail=False,
+        url_path="list_patient"
+    )
+    def listPatientByDoctorId(self, request):
+        doctor = Doctor.objects.get(user=request.user.id)
+        patients = PatientManagement.objects.filter(doctor=doctor)
+        patientsSerializer=PatientSerializer(data=patients, many=True)
+        print('check')
+        print(patientsSerializer)
+        return Response(data=patientsSerializer.data, status=status.HTTP_200_OK)

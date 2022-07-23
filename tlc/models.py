@@ -2,10 +2,11 @@
 from profile import Profile
 from django.db import models
 from authentication.models import User
+from patient.models import Patient
 
 
 class UserUploadedFile(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    patient = models.ForeignKey(Patient,on_delete=models.CASCADE,null=True)
     id_file=models.CharField(max_length=9, null=True)
     drive_id=models.CharField(max_length=100)
     create_at=models.DateTimeField(auto_now_add=True)

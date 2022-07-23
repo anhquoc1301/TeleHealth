@@ -90,6 +90,3 @@ class Address(models.Model):
     class Meta:
         db_table = "address"
         ordering = ["created_at"]
-
-    def __str__(self):
-        return '{}'.format(self.user)

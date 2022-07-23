@@ -367,7 +367,7 @@ def load_data(url, user, urlk):
     print(patient_lung)
     print(right_lung)
     print(left_lung)
-    UserFile = UserUploadedFile.objects.create(user=user , drive_id=0)
+    UserFile = UserUploadedFile.objects.create(patient_id=user , drive_id=0)
     UserFile.save()
     Result = ResultFile.objects.create(upload_file=UserFile, right_lung=right_mask, left_lung=left_mask,
                                        lung_volume=volume, url=urlk)
