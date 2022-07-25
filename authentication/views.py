@@ -29,11 +29,9 @@ class LoginAPIView(generics.GenericAPIView):
 
     def post(self, request):
         try:
-            print(request.data)
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 print(serializer)
-                print('chekc')
                 return sucsess(data=serializer.data)
             return error(data=serializer.errors)
         except(error):
