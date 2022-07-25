@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from rest_framework import generics, status, permissions
 from .serializer import RegisrerSerializer, LoginSerializer, LogoutSerializer, ChangePasswordSerializer, GetUserReadOnlySerializer
-
+from rest_framework import status, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
 from  rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
@@ -32,7 +34,7 @@ class LoginAPIView(generics.GenericAPIView):
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 print(serializer)
-                return sucsess(data=serializer.data)
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
             return error(data=serializer.errors)
         except(error):
             print(error)
