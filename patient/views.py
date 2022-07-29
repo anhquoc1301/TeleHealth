@@ -6,14 +6,13 @@ from authentication.mixins import GetSerializerClassMixin
 from .models import Patient
 from .serializers import PatientSerializer
 from rest_framework import generics, status, permissions
-from apartment.message import error,sucsess
+from base.message import success, error
 
 from authentication.models import User
-from apartment.pagination import CustomNumberPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
-from expenses.permissions import Roler3,Roler5, Roler1
+from authentication.permissions import Role1, Role2, Role3, Role4
 
 
 class PatientViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
@@ -25,8 +24,5 @@ class PatientViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     serializer_class = PatientSerializer
     permission_classes_by_action = {
         'list': [AllowAny],
-        "create": [permissions.IsAuthenticated],
-        "retrieve": [Roler1|Roler3],
-        "update": [Roler5],
-        "destroy": [Roler3],
+        "destroy": [Role3],
     }

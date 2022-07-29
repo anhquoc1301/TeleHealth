@@ -1,3 +1,5 @@
+from address.serializers import AddressSerializer
+from medical_unit.serializers import MedicalUnitSerializer
 from rest_framework import serializers
 from .models import User
 from django.contrib import auth
@@ -8,11 +10,11 @@ from django.utils.translation import gettext_lazy as _
 
 class RegisrerSerializer(serializers.ModelSerializer):
     password=serializers.CharField(max_length=50, min_length=6, write_only=True)
-    roler = serializers.CharField(max_length=30,required=True)
+    role = serializers.CharField(max_length=30,required=True)
 
     class Meta:
         model =User
-        fields = ['email', 'password', 'username', 'phone' ,'roler']
+        fields = ['email', 'password', 'username', 'phone' ,'role']
 
     def validate(self, attrs):
         email = attrs.get('email','')
@@ -30,11 +32,11 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     username = serializers.CharField(max_length=255, min_length=3, required=False)
     tokens = serializers.SerializerMethodField()
-    roler = serializers.CharField(max_length=30, required=False)
+    role = serializers.CharField(max_length=30, required=False)
 
-    def get_roler(self, obj):
+    def get_role(self, obj):
         user = User.objects.get(email=obj['email'])
-        role = user.roler
+        role = user.role
         return role
 
     def get_tokens(self, obj):
@@ -66,7 +68,7 @@ class LoginSerializer(serializers.Serializer):
         return {
             'email': user.email,
             'username': user.username,
-            'roler': user.roler,
+            'role': user.role,
             't': user.tokens,
 
         }
@@ -133,3 +135,17 @@ class ChangePasswordSerializer(serializers.Serializer):
 class GetUserReadOnlySerializer(serializers.Serializer):
     email = serializers.CharField(read_only=True)
     fullname = serializers.CharField(read_only=True)
+
+class DoctorRegisterSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255, min_length=3)
+    password = serializers.CharField(max_length=68, min_length=6)
+    username = serializers.CharField(max_length=255, min_length=3)
+    phone = serializers.CharField(max_length=20)
+    name = serializers.CharField(max_length=200)
+    gender = serializers.CharField(max_length=20)
+    unsignedName = serializers.CharField(max_length=200)
+    medicalUnit = serializers.CharField(max_length=50)
+    country = serializers.CharField(max_length=50)
+    province = serializers.CharField(max_length=50)
+    district = serializers.CharField(max_length=50)
+    ward = serializers.CharField(max_length=50)

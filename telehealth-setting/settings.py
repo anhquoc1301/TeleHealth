@@ -40,19 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'authentication',
-    # 'expenses',
-    # 'apartment',
-    # 'company',
     'doctor',
     'address',
     'patient',
-    'medical_bill',
+    'medical_record',
     'patient_management',
     'medical_unit',
     'drf_yasg',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
     'tlc',
+    'upload',
 ]
 
 MIDDLEWARE = [

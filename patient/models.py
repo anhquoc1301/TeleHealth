@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from address.models import Address
+from address.models import Address, Ethnic
 from authentication.models import User
 from medical_unit.models import MedicalUnit
     # Create your models here.
@@ -14,7 +14,8 @@ class Patient(models.Model):
     gender = models.CharField(choices=GENDER_CHOISE, max_length=20)
     unsignedName = models.CharField(max_length=200)
     medicalUnit = models.ForeignKey(MedicalUnit, on_delete=models.CASCADE, related_name='patient')
-    # address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='patient')
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='patient')
+    ethnic = models.ForeignKey(Ethnic, on_delete=models.CASCADE, related_name='patient')
     dateOfBirth = models.DateField()
     insuranceCode = models.CharField(max_length=20)
     identification = models.CharField(max_length=20)

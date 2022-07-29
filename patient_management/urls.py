@@ -7,9 +7,15 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register("patient_management", views.PatientManagementViewSet, "patient_management")
+router.register("", views.PatientManagementViewSet, "patient_management")
 
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('list_doctor_from_patient/<str:pk>', views.PatientManagementViewSet.as_view({
+        'get': 'listDoctorFromPatient'
+    })),
+    path('remove_patient_management/<str:pk>', views.PatientManagementViewSet.as_view({
+        'post': 'removePatientManagement'
+    })),
 ]

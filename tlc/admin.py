@@ -5,4 +5,4 @@ from .models import *
 
 admin.site.register(UserUploadedFile)
 admin.site.register(ResultFile)
-admin.site.register(File)
+admin.site.register(FileTLC)

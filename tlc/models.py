@@ -24,7 +24,7 @@ class ResultFile(models.Model):
     def __str__(self):
         return str(self.upload_file)
 
-class File(models.Model):
+class FileTLC(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     f_name = models.CharField(max_length=255)
     myfiles = models.FileField(upload_to="")

@@ -6,7 +6,7 @@ from datetime import datetime
 import shutil
 import os
 from rest_framework.views import APIView
-from apartment.message import sucsess
+from base.message import success, error
 from .utils import load_data
 class LoadFile(APIView):
     def post(self, request):
@@ -26,7 +26,7 @@ class LoadFile(APIView):
             # drive = GoogleDrive(gauth)
             userob=User.objects.get(id=request_user)
             for uploaded_file in uploaded_files:
-                File(f_name=request_user, myfiles=uploaded_file, user=userob).save()
+                FileTLC(f_name=request_user, myfiles=uploaded_file, user=userob).save()
             for uploaded_file in uploaded_files:
                 uploaded_file_name = str(uploaded_file)
                 global server_store_path
@@ -85,4 +85,4 @@ class LoadFile(APIView):
                 'left_lung': left_mask,
                 'lung_volume': volume,
             }
-            return sucsess(data=context)
+            return success(data=context)

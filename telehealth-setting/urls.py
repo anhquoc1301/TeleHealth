@@ -39,12 +39,9 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authentication.urls')),
-    # path('expenses/', include('expenses.urls')),
-    # path('apartment/', include('apartment.urls')),
-    # path('telehealthAPI/', include('company.urls')),
     path('doctor/', include('doctor.urls')),
     path('patient/', include('patient.urls')),
-    path('medical_bill/', include('medical_bill.urls')),
+    path('medical_record/', include('medical_record.urls')),
     path('medical_unit/', include('medical_unit.urls')),
     path('address/', include('address.urls')),
     path('patient_management/', include('patient_management.urls')),

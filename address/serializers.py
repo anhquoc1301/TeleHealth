@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import Country, Province, Wards, Address, District
+from .models import Country, Ethnic, Province, Ward, Address, District
 
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -13,9 +13,9 @@ class ProvinceSerializer(serializers.ModelSerializer):
         model = Province
         fields = '__all__'
 
-class WardsSerializer(serializers.ModelSerializer):
+class WardSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Wards
+        model = Ward
         fields = '__all__'
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -26,4 +26,9 @@ class AddressSerializer(serializers.ModelSerializer):
 class DistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = District
+        fields = '__all__'  
+
+class EthnicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ethnic
         fields = '__all__'  

@@ -1,29 +1,34 @@
 from django.shortcuts import render
+from address.models import Address
+from doctor.models import Doctor
+from doctor.serializers import DoctorSerializer
+from .permissions import Role1, Role3
 from rest_framework import generics, status, permissions
-from .serializer import RegisrerSerializer, LoginSerializer, LogoutSerializer, ChangePasswordSerializer, GetUserReadOnlySerializer
+from .serializer import DoctorRegisterSerializer, RegisrerSerializer, LoginSerializer, LogoutSerializer, ChangePasswordSerializer, GetUserReadOnlySerializer
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from  rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 
 from .mixins import GetSerializerClassMixin
-from apartment.message import sucsess,error
+from base.message import success, error
+from django.db import transaction
 
 # Create your views here.
+
+
 class RegisterView(generics.GenericAPIView):
     serializer_class = RegisrerSerializer
+
     def post(self, request):
         user = request.data
-        # try:
         serializer = self.serializer_class(data=user)
         if serializer.is_valid():
             serializer.save()
-            return sucsess(data=serializer.data)
+            return success(data=serializer.data)
         return error(data=serializer.errors)
-        # except:
-        #     return error()
 
 
 class LoginAPIView(generics.GenericAPIView):
@@ -33,13 +38,10 @@ class LoginAPIView(generics.GenericAPIView):
         try:
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
-                print(serializer)
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-            return error(data=serializer.errors)
-        except(error):
-            print(error)
+                return success(data=serializer.data)
             return error("Sign in failed", data='')
-
+        except:
+            return error("Sign in failed", data='')
 
 
 class LogoutAPIView(generics.GenericAPIView):
@@ -51,7 +53,7 @@ class LogoutAPIView(generics.GenericAPIView):
             serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return sucsess("Logout success",'')
+                return success("Logout success", '')
             return error(data=serializer.errors)
         except:
             return error("Sign out failed", data='')
@@ -61,8 +63,7 @@ class Change_passwordAPIview(generics.GenericAPIView, GetSerializerClassMixin):
 
     serializer_class = ChangePasswordSerializer
 
-    permission_classes =[permissions.IsAuthenticated]
-
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         try:
@@ -70,14 +71,50 @@ class Change_passwordAPIview(generics.GenericAPIView, GetSerializerClassMixin):
             if serializer.is_valid():
                 user = request.user
                 if not user.check_password(serializer.validated_data["old_password"]):
-                    return error('old password is not correct','')
+                    return error('old password is not correct', '')
                 user.set_password(serializer.validated_data["new_password"])
                 user.save()
                 serializer = GetUserReadOnlySerializer(user)
-                return sucsess(data=serializer.data)
+                return success(data=serializer.data)
             return error(data=serializer.errors)
         except:
             return error("Change password failed", data='')
 
 
+class DoctorRegister(generics.GenericAPIView):
+    serializer_class = DoctorRegisterSerializer
+    permission_classes = [AllowAny]
 
+    @transaction.atomic
+    def post(self, request):
+        try:
+            doctorData = request.data
+            serializer = self.serializer_class(data=doctorData)
+            if serializer.is_valid():
+                user = User.objects.create_user(
+                    email=doctorData['email'],
+                    password=doctorData['password'],
+                    username=doctorData['username'],
+                    phone=doctorData['phone'],
+                    role='role1',
+                )
+                address = Address.objects.create(
+                    country_id=doctorData['country'],
+                    province_id=doctorData['province'],
+                    district_id=doctorData['district'],
+                    ward_id=doctorData['ward'],
+                )
+                doctor = Doctor.objects.create(
+                    name=doctorData['name'],
+                    gender=doctorData['gender'],
+                    unsignedName=doctorData['unsignedName'],
+                    medicalUnit_id=doctorData['medicalUnit'],
+                    is_accept=False,
+                    address_id=address.id,
+                    user_id=user.id,
+                )
+                transaction.atomic()
+                doctorSerializer = DoctorSerializer(doctor)
+                return success(data=doctorSerializer.data)
+        except:
+            return error("Failed", data='')

@@ -4,10 +4,9 @@ from rest_framework.response import Response
 from .models import Company
 from .serializers import CompanySerializer
 from rest_framework import generics, status, permissions
-from apartment.message import error,sucsess
+from apartment.message import error,success
 
 from authentication.models import User
-from apartment.pagination import CustomNumberPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
@@ -46,7 +45,7 @@ class CompanyViewset(viewsets.ModelViewSet, CustomNumberPagination):
                 return self.get_paginated_response(serializer.data)
 
             serializer = self.get_serializer(queryset, many=True)
-            return sucsess(data=serializer.data)
+            return success(data=serializer.data)
 
         except:
             return error("Get company fail")
@@ -69,7 +68,7 @@ class CompanyViewset(viewsets.ModelViewSet, CustomNumberPagination):
                 request.data["updated_user_name"] = user.username
             if serializer.is_valid():
                 self.perform_create(serializer)
-                return sucsess(data=serializer.data)
+                return success(data=serializer.data)
             else:
                 return error(data=serializer.errors)
         except:
@@ -79,7 +78,7 @@ class CompanyViewset(viewsets.ModelViewSet, CustomNumberPagination):
         try:
             instance = self.get_object()
             serializer = self.get_serializer(instance)
-            return sucsess(data=serializer.data)
+            return success(data=serializer.data)
         except:
             return error("Get company detail fail")
 
@@ -88,7 +87,7 @@ class CompanyViewset(viewsets.ModelViewSet, CustomNumberPagination):
             pk = self.kwargs.get('pk')
             instance = Company.objects.get(id=pk)
             self.perform_destroy(instance)
-            return sucsess('delete sucsess', data="")
+            return success('delete success', data="")
         except:
             return error("delete company fail")
 

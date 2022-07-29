@@ -8,7 +8,7 @@ class MedicalUnit(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     unsignedName = models.CharField(max_length=200)
-    # address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='medicalUnit')
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='medicalUnit')
     description = models.CharField(max_length=500)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="medicalUnit")
 
