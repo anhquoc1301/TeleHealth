@@ -57,14 +57,14 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             return error(data="data not valid")
 
     def list_medical_record_by_patientId(self, request, *args, **kwargs):
-        patientId = self.kwargs.get('pk')
+        patientId = self.request.GET.get('pk')
         medicalRecords=MedicalRecord.objects.filter(patient_id=patientId)
         medicalRecordsSerializer = self.get_serializer(medicalRecords, many=True)
         return success(data=medicalRecordsSerializer.data)
     
     def delete_file_medical_record(self, request, *args, **kwargs):
         try:
-            fileMedicalRecordId = self.kwargs.get('pk')
+            fileMedicalRecordId = self.request.GET.get('pk')
             fileMedicalRecord=FileMedicalRecord.objects.get(id=fileMedicalRecordId)
             fileMedicalRecord.delete()
             return success(data='delete success!')
@@ -72,14 +72,14 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             return error(data='do not success')
 
     def detail_medical_record(self, request, *args, **kwargs):
-        medicalRecordId = self.kwargs.get('pk')
+        medicalRecordId = self.request.GET.get('pk')
         medicalRecord=MedicalRecord.objects.get(id=medicalRecordId)
         medicalRecordSerializer = self.get_serializer(medicalRecord)
         return success(data=medicalRecordSerializer.data)
 
     def update_medical_record(self, request, *args, **kwargs):
         try:
-            medicalRecordId = self.kwargs.get('pk')
+            medicalRecordId = self.request.GET.get('pk')
             medicalRecord=MedicalRecord.objects.get(id=medicalRecordId)
             medicalRecordSerializer = self.get_serializer(instance=medicalRecord, data=request.data)
             print(medicalRecordSerializer)

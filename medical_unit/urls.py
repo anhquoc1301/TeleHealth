@@ -10,13 +10,13 @@ router.register("", MedicalUnitViewSet, "medical_unit")
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('detail_patient_by_medical_unit/<str:pk>', MedicalUnitViewSet.as_view({
+    path('detail_patient_by_medical_unit', MedicalUnitViewSet.as_view({
         'get': 'detailPatientByMedicalUnit'
     })),
-    path('update_patient_by_medical_unit/<str:pk>', MedicalUnitViewSet.as_view({
+    path('update_patient_by_medical_unit', MedicalUnitViewSet.as_view({
         'post': 'updatePatientByMedicalUnit'
     })),
-    path('accept_doctor_wait_accept_by_medical_unit/<str:pk>', MedicalUnitViewSet.as_view({
+    path('accept_doctor_wait_accept_by_medical_unit', MedicalUnitViewSet.as_view({
         'post': 'acceptDoctorWaitAcceptByMedicalUnit'
     })),
 ]

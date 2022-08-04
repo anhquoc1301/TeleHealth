@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 import django.contrib.auth.password_validation as validators
 from django.utils.translation import gettext_lazy as _
 
-class RegisrerSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     password=serializers.CharField(max_length=50, min_length=6, write_only=True)
     role = serializers.CharField(max_length=30,required=True)
 
@@ -141,11 +141,11 @@ class DoctorRegisterSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=68, min_length=6)
     username = serializers.CharField(max_length=255, min_length=3)
     phone = serializers.CharField(max_length=20)
-    name = serializers.CharField(max_length=200)
-    gender = serializers.CharField(max_length=20)
-    unsignedName = serializers.CharField(max_length=200)
-    medicalUnit = serializers.CharField(max_length=50)
-    country = serializers.CharField(max_length=50)
-    province = serializers.CharField(max_length=50)
-    district = serializers.CharField(max_length=50)
-    ward = serializers.CharField(max_length=50)
+    # name = serializers.CharField(max_length=200)
+    # gender = serializers.CharField(max_length=20)
+    # unsignedName = serializers.CharField(max_length=200)
+    # medicalUnit = serializers.CharField(max_length=50)
+    # country = serializers.CharField(max_length=50)
+    # province = serializers.CharField(max_length=50)
+    # district = serializers.CharField(max_length=50)
+    # ward = serializers.CharField(max_length=50)

@@ -16,13 +16,13 @@ router.register("ethnic", views.EthnicViewSet, "ethnic")
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('province/list_by_country_id/<str:pk>', views.ProvinceViewSet.as_view({
+    path('province/list_by_country_id', views.ProvinceViewSet.as_view({
         'get': 'list_by_countryId'
     })),
-    path('district/list_by_province_id/<str:pk>', views.DistrictViewSet.as_view({
+    path('district/list_by_province_id', views.DistrictViewSet.as_view({
         'get': 'list_by_provinceId'
     })),
-    path('ward/list_by_district_id/<str:pk>', views.WardViewSet.as_view({
+    path('ward/list_by_district_id', views.WardViewSet.as_view({
         'get': 'list_by_districtId'
     })),
 ]

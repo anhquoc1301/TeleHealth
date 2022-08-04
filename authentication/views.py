@@ -4,7 +4,7 @@ from doctor.models import Doctor
 from doctor.serializers import DoctorSerializer
 from .permissions import Role1, Role3
 from rest_framework import generics, status, permissions
-from .serializer import DoctorRegisterSerializer, RegisrerSerializer, LoginSerializer, LogoutSerializer, ChangePasswordSerializer, GetUserReadOnlySerializer
+from .serializer import DoctorRegisterSerializer, RegisterSerializer, LoginSerializer, LogoutSerializer, ChangePasswordSerializer, GetUserReadOnlySerializer
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -20,7 +20,7 @@ from django.db import transaction
 
 
 class RegisterView(generics.GenericAPIView):
-    serializer_class = RegisrerSerializer
+    serializer_class = RegisterSerializer
 
     def post(self, request):
         user = request.data
@@ -98,23 +98,23 @@ class DoctorRegister(generics.GenericAPIView):
                     phone=doctorData['phone'],
                     role='role1',
                 )
-                address = Address.objects.create(
-                    country_id=doctorData['country'],
-                    province_id=doctorData['province'],
-                    district_id=doctorData['district'],
-                    ward_id=doctorData['ward'],
-                )
-                doctor = Doctor.objects.create(
-                    name=doctorData['name'],
-                    gender=doctorData['gender'],
-                    unsignedName=doctorData['unsignedName'],
-                    medicalUnit_id=doctorData['medicalUnit'],
-                    is_accept=False,
-                    address_id=address.id,
-                    user_id=user.id,
-                )
+                # address = Address.objects.create(
+                #     country_id=doctorData['country'],
+                #     province_id=doctorData['province'],
+                #     district_id=doctorData['district'],
+                #     ward_id=doctorData['ward'],
+                # )
+                # doctor = Doctor.objects.create(
+                #     name=doctorData['name'],
+                #     gender=doctorData['gender'],
+                #     unsignedName=doctorData['unsignedName'],
+                #     medicalUnit_id=doctorData['medicalUnit'],
+                #     is_accept=False,
+                #     address_id=address.id,
+                #     user_id=user.id,
+                # )
                 transaction.atomic()
-                doctorSerializer = DoctorSerializer(doctor)
+                doctorSerializer = RegisterSerializer(user)
                 return success(data=doctorSerializer.data)
         except:
             return error("Failed", data='')

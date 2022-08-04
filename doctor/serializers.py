@@ -9,6 +9,12 @@ class DoctorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DoctorUpdateSerializer(serializers.ModelSerializer):
+    phone=serializers.CharField(max_length=15)
+    country=serializers.CharField(max_length=40)
+    province=serializers.CharField(max_length=40)
+    district=serializers.CharField(max_length=40)
+    ward=serializers.CharField(max_length=40)
+
     class Meta:
         model = Doctor
-        exclude = ['user', 'is_accept', 'address', 'medicalUnit']
+        exclude = ['user', 'is_accept']

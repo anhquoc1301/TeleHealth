@@ -41,13 +41,13 @@ class PatientManagementViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         return Response(data=patientsSerializer.data, status=status.HTTP_200_OK)
 
     def listDoctorFromPatient(self, request, *args, **kwargs):
-        patientId = self.kwargs.get('pk')
+        patientId = self.request.GET.get('pk')
         doctors = PatientManagement.objects.filter(patient_id=patientId)
         doctorsSerializer=DoctorReadOnlyDoctorSerializer(doctors, many=True)
         return Response(data=doctorsSerializer.data, status=status.HTTP_200_OK)
 
     def removePatientManagement(self, request, *args, **kwargs):
-        id = self.kwargs.get('pk')
+        id = self.request.GET.get('pk')
         patientManagement=PatientManagement.objects.get(id=id)
         patientManagement.delete()
         return success(data="delete success")

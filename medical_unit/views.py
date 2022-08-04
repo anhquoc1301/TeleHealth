@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from pkg_resources import require
 from address.models import Address
-from authentication.serializer import RegisrerSerializer
+from authentication.serializer import RegisterSerializer
 from doctor.models import Doctor
 from doctor.serializers import DoctorSerializer
 from patient.models import Patient
@@ -33,7 +33,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     queryset = MedicalUnit.objects.all()
     permission_classes = [Role3]
     permission_classes_by_action = {
-        'detailPatientByMedicalUnit': Role1or3
+        'detailPatientByMedicalUnit': [Role1or3]
     }
     serializer_class = MedicalUnitSerializer
     serializer_action_classes = {
@@ -44,7 +44,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     def create(self, request):
         userData = request.data['user']
         medicalData = request.data['medical']
-        userSerializer = RegisrerSerializer(data=userData)
+        userSerializer = RegisterSerializer(data=userData)
         if userSerializer.is_valid():
             newUser = User.objects.create_user(
                 email=userData['email'], password=userData['password'], username=userData['username'], phone=userData['phone'], Role=userData['Role'])
@@ -127,13 +127,13 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             return error(data='user not exist')
 
     def detailPatientByMedicalUnit(self, request, *args, **kwargs):
-        patientId = self.kwargs.get('pk')
+        patientId = self.request.GET.get('pk')
         patient = Patient.objects.get(id=patientId)
         patientSerializer = PatientDetailSerializer(patient)
         return Response(data=patientSerializer.data, status=status.HTTP_200_OK)
 
     def updatePatientByMedicalUnit(self, request, *args, **kwargs):
-        patientId = self.kwargs.get('pk')
+        patientId = self.request.GET.get('pk')
         patient = Patient.objects.get(id=patientId)
         patientSerializer = self.get_serializer(
             instance=patient, data=request.data, partial=True)
@@ -172,7 +172,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         return Response(data=doctorsSerializer.data, status=status.HTTP_200_OK)
 
     def acceptDoctorWaitAcceptByMedicalUnit(self, request, *args, **kwargs):
-        doctorId = self.kwargs.get('pk')
+        doctorId = self.request.GET.get('pk')
         doctor = Doctor.objects.get(id=doctorId)
         doctor.is_accept = True if doctor.is_accept == False else False
         doctor.save()

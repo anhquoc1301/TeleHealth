@@ -54,6 +54,9 @@ class Role1or3(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-
-        if request.user.role == 'role3' or (request.user.role == 'role1' and Doctor.objects.get(user_id=request.user.id).is_accept == True):
+        if request.user.role == 'role1' and Doctor.objects.get(user_id=request.user.id).is_accept == True:
+            role=True
+        else: 
+            role=False
+        if request.user.role == 'role3' or role:
             return bool(request.user and request.user.role)

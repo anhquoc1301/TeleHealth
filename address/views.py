@@ -49,8 +49,14 @@ class ProvinceViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'list_by_countryId': [AllowAny],
     }
 
+    # @action(
+    #     methods=["GET"],
+    #     detail=False,
+    #     url_path="list_by_country_id"
+    # )
     def list_by_countryId(self, request, *args, **kwargs):
-        countryId = self.kwargs.get('pk')
+        countryId = self.request.GET.get('pk')
+        print(countryId)
         provinces=Province.objects.filter(country_id=countryId)
         provincesSerializer=ProvinceSerializer(provinces, many=True)
         return success(data=provincesSerializer.data)
@@ -69,7 +75,7 @@ class DistrictViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     }
 
     def list_by_provinceId(self, request, *args, **kwargs):
-        provinceId = self.kwargs.get('pk')
+        provinceId = self.request.GET.get('pk')
         districts=District.objects.filter(province_id=provinceId)
         districtsSerializer=DistrictSerializer(districts, many=True)
         return success(data=districtsSerializer.data)
@@ -88,7 +94,7 @@ class WardViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     }
 
     def list_by_districtId(self, request, *args, **kwargs):
-        districtId = self.kwargs.get('pk')
+        districtId = self.request.GET.get('pk')
         wards=Ward.objects.filter(country_id=districtId)
         wardsSerializer=WardSerializer(wards, many=True)
         return success(data=wardsSerializer.data)

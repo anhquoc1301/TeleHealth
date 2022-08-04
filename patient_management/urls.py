@@ -12,10 +12,10 @@ router.register("", views.PatientManagementViewSet, "patient_management")
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('list_doctor_from_patient/<str:pk>', views.PatientManagementViewSet.as_view({
+    path('list_doctor_from_patient', views.PatientManagementViewSet.as_view({
         'get': 'listDoctorFromPatient'
     })),
-    path('remove_patient_management/<str:pk>', views.PatientManagementViewSet.as_view({
+    path('remove_patient_management', views.PatientManagementViewSet.as_view({
         'post': 'removePatientManagement'
     })),
 ]
