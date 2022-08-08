@@ -50,7 +50,7 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                     district_id=request.data['district'], 
                     ward_id=request.data['ward']
                     )
-                request.data['address']=address
+                request.data['address']=address.id
                 doctorSerializer = self.get_serializer(
                     instance=doctor, data=request.data, partial=True)
                 doctorSerializer.is_valid(raise_exception=True)
