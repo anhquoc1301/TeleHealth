@@ -117,7 +117,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         if medicalUnitId:
             medicalUnit = get_object_or_404(MedicalUnit, user_id=medicalUnitId)
             patients = Patient.objects.filter(medicalUnit=medicalUnit)
-            dataFilter = request.data['dataFilter']
+            dataFilter = self.request.GET.get('dataFilter')
             if dataFilter != 'null':
                 patients = patients.filter(
                     Q(name=dataFilter) | Q(gender=dataFilter))
@@ -165,7 +165,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         medicalUnit = MedicalUnit.objects.get(user=request.user.id)
         doctors = Doctor.objects.filter(
             Q(medicalUnit=medicalUnit) & Q(is_accept=True))
-        dataFilter = request.data['dataFilter']
+        dataFilter = self.request.GET.get('dataFilter')
         if dataFilter != 'null':
             doctors = doctors.filter(Q(name=dataFilter) | Q(gender=dataFilter))
         doctorsSerializer = DoctorSerializer(doctors, many=True)
