@@ -1,25 +1,29 @@
 from django.shortcuts import render
+from rest_framework.decorators import action
+from authentication.mixins import GetSerializerClassMixin
+from tlc.serializers import ResultFileSerializer, UserUploadedFileSerializer
 from .models import *
 import numpy as np
 from glob import glob
 from datetime import datetime
 import shutil
 import os
-from rest_framework.views import APIView
 from base.message import success, error
 from .utils import load_data
-class LoadFile(APIView):
-    def post(self, request):
+from authentication.permissions import Role1, Role2, Role3, Role4, Role1or3
+from rest_framework import status, viewsets
+
+class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
+
+    def post_file(self, request):
         request_user = request.user.id
         patientId=request.data['patientId']
-        print(request_user)
         id = request.user.id
         if request.method == "POST":
             uploaded_files = request.FILES.getlist("uploadfiles")
             urlk = str(datetime.today().year) + str(datetime.today().month) + str(datetime.today().day) + \
                 str(datetime.now().hour)+str(datetime.now().minute) + \
                 str(datetime.now().second) + str(id)
-            print(urlk)
             Folder = './media/'+urlk
             os.makedirs(Folder)
             # gauth = GoogleAuth()
@@ -86,3 +90,15 @@ class LoadFile(APIView):
                 'lung_volume': volume,
             }
             return success(data=context)
+   
+    def get_result_by_patient_id(self, request):
+        patientId=self.request.GET.get('pk')
+        tlc=UserUploadedFile.objects.filter(patient_id=patientId)
+        tlcSerializer=UserUploadedFileSerializer(tlc, many=True)
+        return success(data=tlcSerializer.data)
+
+    def detail_result(self, request):
+        detailId=self.request.GET.get('pk')
+        listDetail=ResultFile.objects.get(upload_file_id=detailId)
+        listDetailSerializer=ResultFileSerializer(listDetail)
+        return success(data=listDetailSerializer.data)
