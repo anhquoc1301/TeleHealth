@@ -40,17 +40,17 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         url_path="update_profile_doctor"
     )
     def update_profile_doctor(self, request):
-        try:
-            user_id = request.user.id
-            if user_id:
-                doctor = get_object_or_404(Doctor, user_id=user_id)
+        user_id = request.user.id
+        if user_id:
+            try:
+                doctor = Doctor.objects.get(user_id=user_id)
                 address = Address.objects.create(
-                    country_id=request.data['country'], 
-                    province_id=request.data['province'], 
-                    district_id=request.data['district'], 
+                    country_id=request.data['country'],
+                    province_id=request.data['province'],
+                    district_id=request.data['district'],
                     ward_id=request.data['ward']
-                    )
-                request.data['address']=address.id
+                )
+                request.data['address'] = address.id
                 doctorSerializer = self.get_serializer(
                     instance=doctor, data=request.data, partial=True)
                 doctorSerializer.is_valid(raise_exception=True)
@@ -59,7 +59,22 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                 user.phone = request.data['phone']
                 user.save()
                 return success(data=doctorSerializer.data)
-            else:
-                raise Exception('not valid')
-        except(Exception):
-            return error(data=Exception)
+            except:
+                address = Address.objects.create(
+                    country_id=request.data['country'],
+                    province_id=request.data['province'],
+                    district_id=request.data['district'],
+                    ward_id=request.data['ward']
+                )
+                doctor = Doctor.objects.create(
+                    user_id=user_id, 
+                    name=request.data['name'], 
+                    gender=request.data['gender'], 
+                    unsignedName=request.data['unsignedName'], 
+                    medicalUnit_id=request.data['medicalUnit'],
+                    address=address)
+                doctorSerializer=DoctorSerializer(doctor)
+                return success(data=doctorSerializer.data)
+
+        else:
+            raise Exception('not valid')
