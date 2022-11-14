@@ -1,34 +1,31 @@
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .models import Company
-from .serializers import CompanySerializer
+
+from authentication.mixins import GetSerializerClassMixin
+from upload.serializers import FileSerializer
+from .models import Meeting, MeetingGuest
+from .serializers import MeetingGuestSerializer, MeetingSerializer 
 from rest_framework import generics, status, permissions
-from apartment.message import error,success
+from base.message import success, error
 
 from authentication.models import User
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
-from expenses.permissions import Roler3,Roler5, Roler1
+from authentication.permissions import Role1, Role1or3, Role2, Role3, Role4
 
-
-class CompanyViewset(viewsets.ModelViewSet, CustomNumberPagination):
-    queryset = Company.objects.all()
-    serializer_class = CompanySerializer
+class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
+    queryset = Meeting.objects.all()
+    serializer_class = MeetingSerializer
     permission_classes = [permissions.IsAuthenticated]
-    pagination_class = CustomNumberPagination
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
-    search_fields = ['company_name', 'address_company']
-    ordering_fields = ['company_name', 'address_company', 'id']
-    filter_fields = ('company_name', 'address_company', 'id')
-
+        
     permission_classes_by_action = {
         'list': [AllowAny],
         "create": [permissions.IsAuthenticated],
-        "retrieve": [Roler1|Roler3],
-        "update": [Roler5],
-        "destroy": [Roler3],
+        "retrieve": [Role1|Role3],
+        "update": [Role1],
+        "destroy": [Role3],
     }
 
     def list(self, request, *args, **kwargs):

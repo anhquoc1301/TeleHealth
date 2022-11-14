@@ -1,9 +1,11 @@
-
+from .models import MeetingGuest, Meeting
 from rest_framework import serializers
-from .models import Company
-
-
-class CompanySerializer(serializers.ModelSerializer):
+class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Company
+        model = Meeting
+        fields = '__all__'
+
+class MeetingGuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MeetingGuest
         fields = '__all__'

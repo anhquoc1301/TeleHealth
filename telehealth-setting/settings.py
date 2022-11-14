@@ -48,11 +48,13 @@ INSTALLED_APPS = [
     'medical_record',
     'patient_management',
     'medical_unit',
+    'meeting',
     'drf_yasg',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
     'tlc',
     'upload',
+    'tlc_result',
 ]
 
 MIDDLEWARE = [
@@ -71,7 +73,7 @@ ROOT_URLCONF = 'telehealth-setting.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,7 +98,7 @@ DATABASES = {
        'ENGINE': 'django.db.backends.postgresql',
        'NAME': 'TeleHealth',
        'USER': 'postgres',
-       'PASSWORD': '123456',
+       'PASSWORD': '0',
        'HOST': 'localhost',
        'PORT': '5432',
    }
@@ -191,9 +193,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 STATIC_URL = '/static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -201,6 +202,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URLS = 'media'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 AUTH_USER_MODEL = 'authentication.User'
 

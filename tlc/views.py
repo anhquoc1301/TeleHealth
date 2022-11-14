@@ -9,11 +9,14 @@ from datetime import datetime
 import shutil
 import os
 from base.message import success, error
-from .utils import load_data
+from .utils2 import load_data
 from authentication.permissions import Role1, Role2, Role3, Role4, Role1or3
 from rest_framework import status, viewsets
-
+from rest_framework.permissions import AllowAny, IsAuthenticated
 class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
+    queryset = Patient.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = UserUploadedFileSerializer
 
     def post_file(self, request):
         request_user = request.user.id
@@ -63,26 +66,20 @@ class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             # loop over the image files and store everything into a list
             right_mask, left_mask, volume, z = load_data(
                 Folder, patientId, urlk)
-            # k1 = len(z)
-            # h1 = 3 * k1
-            # x1 = z[:, :, 0].reshape(-1)
-            # y1 = z[:, :, 1].reshape(-1)
-            # z1 = z[:, :, 2].reshape(-1)
-            # np.save('./media/'+urlk+'/x.npy', x1)
-            # np.save('./media/'+urlk+'/y.npy', y1)
-            # np.save('./media/'+urlk+'/z.npy', z1)
-            # p1 = x1.tolist()
-            # p2 = y1.tolist()
-            # p3 = z1.tolist()
-            # d1 = np.arange(0, h1, 3)
-            # e1 = np.arange(1, h1, 3)
-            # f1 = np.arange(2, h1, 3)
-            # np.save('./media/'+urlk+'/d.npy', d1)
-            # np.save('./media/'+urlk+'/e.npy', e1)
-            # np.save('./media/'+urlk+'/f.npy', f1)
-            # p4 = x1.tolist()
-            # p5 = y1.tolist()
-            # p6 = z1.tolist()
+            k1 = len(z)
+            h1 = 3 * k1
+            x1 = z[:, :, 0].reshape(-1)
+            y1 = z[:, :, 1].reshape(-1)
+            z1 = z[:, :, 2].reshape(-1)
+            np.save('./media/'+urlk+'/x.npy', x1)
+            np.save('./media/'+urlk+'/y.npy', y1)
+            np.save('./media/'+urlk+'/z.npy', z1)
+            d1 = np.arange(0, h1, 3)
+            e1 = np.arange(1, h1, 3)
+            f1 = np.arange(2, h1, 3)
+            np.save('./media/'+urlk+'/d.npy', d1)
+            np.save('./media/'+urlk+'/e.npy', e1)
+            np.save('./media/'+urlk+'/f.npy', f1)
 
             context = {
                 'right_lung': right_mask,
@@ -96,9 +93,3 @@ class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         tlc=UserUploadedFile.objects.filter(patient_id=patientId)
         tlcSerializer=UserUploadedFileSerializer(tlc, many=True)
         return success(data=tlcSerializer.data)
-
-    def detail_result(self, request):
-        detailId=self.request.GET.get('pk')
-        listDetail=ResultFile.objects.get(upload_file_id=detailId)
-        listDetailSerializer=ResultFileSerializer(listDetail)
-        return success(data=listDetailSerializer.data)
