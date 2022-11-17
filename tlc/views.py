@@ -96,7 +96,7 @@ class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     
     def detail_result(self, request):
         userUploadFileId=self.request.GET.get('pk')
-        tlcResult=ResultFile.objects.filter(upload_file=userUploadFileId)
+        tlcResult=ResultFile.objects.get(upload_file_id=userUploadFileId)
         tlcResultSerializer=ResultFileSerializer(tlcResult)
         return success(data=tlcResultSerializer.data)
     
