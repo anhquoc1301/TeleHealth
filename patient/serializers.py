@@ -31,4 +31,4 @@ class PatientDetailSerializer(serializers.ModelSerializer):
 class PatientUpdateByMedicalUnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        exclude = ['user', 'address', 'ethnic']
+        exclude = ['user', 'address', 'medicalUnit']

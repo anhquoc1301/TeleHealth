@@ -68,6 +68,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                 medicalUnit = get_object_or_404(
                     MedicalUnit, user_id=medicalUnitId)
                 patientData = request.data
+                print(patientData)
                 serializer = self.get_serializer(data=patientData)
                 if serializer.is_valid():
                     user = User.objects.create_user(
@@ -78,10 +79,10 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                         role='role2',
                     )
                     address = Address.objects.create(
-                        country_id=patientData['country'],
-                        province_id=patientData['province'],
-                        district_id=patientData['district'],
-                        ward_id=patientData['ward'],
+                        country=patientData['country'],
+                        province=patientData['province'],
+                        district=patientData['district'],
+                        ward=patientData['ward'],
                     )
                     patient = Patient.objects.create(
                         name=patientData['name'],
@@ -90,8 +91,9 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                         dateOfBirth=patientData['dateOfBirth'],
                         insuranceCode=patientData['insuranceCode'],
                         identification=patientData['identification'],
+                        detail_address=patientData['detail_address'],
                         contact=patientData['contact'],
-                        ethnic_id=patientData['ethnic'],
+                        ethnic=patientData['ethnic'],
                         medicalUnit_id=medicalUnit.id,
                         address_id=address.id,
                         user_id=user.id,

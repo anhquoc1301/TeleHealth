@@ -85,7 +85,6 @@ class DoctorRegister(generics.GenericAPIView):
     serializer_class = DoctorRegisterSerializer
     permission_classes = [AllowAny]
 
-    # @transaction.atomic
     def post(self, request):
         try:
             doctorData = request.data
@@ -98,22 +97,6 @@ class DoctorRegister(generics.GenericAPIView):
                     phone=doctorData['phone'],
                     role='role1',
                 )
-                # address = Address.objects.create(
-                #     country_id=doctorData['country'],
-                #     province_id=doctorData['province'],
-                #     district_id=doctorData['district'],
-                #     ward_id=doctorData['ward'],
-                # )
-                # doctor = Doctor.objects.create(
-                #     name=doctorData['name'],
-                #     gender=doctorData['gender'],
-                #     unsignedName=doctorData['unsignedName'],
-                #     medicalUnit_id=doctorData['medicalUnit'],
-                #     is_accept=False,
-                #     address_id=address.id,
-                #     user_id=user.id,
-                # )
-                # transaction.atomic()
                 doctorSerializer = RegisterSerializer(user)
                 return success(data=doctorSerializer.data)
         except:

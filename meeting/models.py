@@ -5,10 +5,12 @@ from authentication.models import User
 class Meeting(models.Model):
     id = models.BigAutoField(primary_key=True, unique=True)
     meeting_title = models.CharField(max_length=200)
-    meeting_time = models.DateTimeField()
+    meeting_time_start = models.DateTimeField()
+    meeting_time_end = models.DateTimeField()
     meeting_content = models.CharField(max_length=200)
     meeting_url = models.CharField(max_length=200)
-
+    conclusion = models.CharField(max_length=200, null=True)
+    url_file = models.CharField(max_length=200, default='')
     is_valid = models.BooleanField(default=True)
 
     meeting_creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='meeting')

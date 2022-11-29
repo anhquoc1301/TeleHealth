@@ -31,7 +31,6 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     permission_classes_by_action = {
         'list': [AllowAny],
         "update_profile_doctor": [Role1],
-        "destroy": [Role4],
     }
 
     @action(
@@ -45,10 +44,10 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             try:
                 doctor = Doctor.objects.get(user_id=user_id)
                 address = Address.objects.create(
-                    country_id=request.data['country'],
-                    province_id=request.data['province'],
-                    district_id=request.data['district'],
-                    ward_id=request.data['ward']
+                    country=request.data['country'],
+                    province=request.data['province'],
+                    district=request.data['district'],
+                    ward=request.data['ward']
                 )
                 request.data['address'] = address.id
                 doctorSerializer = self.get_serializer(
@@ -61,16 +60,17 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                 return success(data=doctorSerializer.data)
             except:
                 address = Address.objects.create(
-                    country_id=request.data['country'],
-                    province_id=request.data['province'],
-                    district_id=request.data['district'],
-                    ward_id=request.data['ward']
+                    country=request.data['country'],
+                    province=request.data['province'],
+                    district=request.data['district'],
+                    ward=request.data['ward']
                 )
                 doctor = Doctor.objects.create(
                     user_id=user_id, 
                     name=request.data['name'], 
-                    gender=request.data['gender'], 
-                    unsignedName=request.data['unsignedName'], 
+                    gender=request.data['gender'],
+                    detail_address=request.data['detail_address'],
+                    unsignedName=request.data['unsignedName'],
                     medicalUnit_id=request.data['medicalUnit'],
                     address=address)
                 doctorSerializer=DoctorSerializer(doctor)

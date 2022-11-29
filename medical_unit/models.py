@@ -9,6 +9,7 @@ class MedicalUnit(models.Model):
     name = models.CharField(max_length=200)
     unsignedName = models.CharField(max_length=200)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='medicalUnit')
+    detail_address=models.CharField(max_length=200)
     description = models.CharField(max_length=500)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="medicalUnit")
 

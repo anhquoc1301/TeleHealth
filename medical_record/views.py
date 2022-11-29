@@ -82,11 +82,8 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             medicalRecordId = self.request.GET.get('pk')
             medicalRecord=MedicalRecord.objects.get(id=medicalRecordId)
             medicalRecordSerializer = self.get_serializer(instance=medicalRecord, data=request.data)
-            print(medicalRecordSerializer)
             medicalRecordSerializer.is_valid(raise_exception=True)
-            print('check')
             self.perform_update(medicalRecordSerializer)
-            print('check')
             files = self.request.FILES.getlist('files', None)
             if files:
                 for file in files:
@@ -103,4 +100,3 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             return success(data=medicalRecordSerializer.data)
         except:
             return error('data not valid')
-    

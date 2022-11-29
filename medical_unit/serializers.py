@@ -17,6 +17,7 @@ class PatientRegisterSerializer(serializers.Serializer):
     gender = serializers.CharField(max_length=20)
     ethnic = serializers.CharField(max_length=50)
     unsignedName = serializers.CharField(max_length=50)
+    detail_address=serializers.CharField(max_length=255)
     dateOfBirth = serializers.DateField()
     insuranceCode = serializers.CharField(max_length=20)
     identification = serializers.CharField(max_length=20)
