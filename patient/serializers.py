@@ -3,6 +3,8 @@ from authentication.models import User
 from rest_framework import serializers
 from .models import Patient
 from patient_management.models import PatientManagement
+from address.models import Address
+from address.serializers import AddressSerializer
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -17,16 +19,20 @@ class PatientDetailSerializer(serializers.ModelSerializer):
             user=User.objects.get(id=instance.user.id)
             patientEmail = user.email
             patientPhone = user.phone
-            if PatientManagement.objects.get(patient_id=instance.id):
+            if PatientManagement.objects.filter(patient_id=instance.id):
                 patientManagement = True
             else:
                 patientManagement = False
+            address=Address.objects.get(id=instance.address.id)
+            patientAddress = AddressSerializer(instance=address).data                
         except:
             patientEmail = ''
             patientPhone = ''
+            patientAddress = ''
 
         representation['email'] = patientEmail
         representation['phone'] = patientPhone
+        representation['address'] = patientAddress
         representation['patientManagement'] = patientManagement
 
         return representation
