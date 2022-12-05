@@ -68,7 +68,6 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                 medicalUnit = get_object_or_404(
                     MedicalUnit, user_id=medicalUnitId)
                 patientData = request.data
-                print(patientData)
                 serializer = self.get_serializer(data=patientData)
                 if serializer.is_valid():
                     user = User.objects.create_user(
@@ -123,7 +122,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             if dataFilter != 'null':
                 patients = patients.filter(
                     Q(name=dataFilter) | Q(gender=dataFilter))
-            patientsSerializer = PatientSerializer(patients, many=True)
+            patientsSerializer = PatientDetailSerializer(patients, many=True)
             return Response(data=patientsSerializer.data, status=status.HTTP_200_OK)
         else:
             return error(data='user not exist')

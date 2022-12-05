@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from authentication.mixins import GetSerializerClassMixin
 from .models import Patient
-from .serializers import PatientSerializer
+from .serializers import PatientSerializer, PatientDetailSerializer
 from rest_framework import generics, status, permissions
 from base.message import success, error
 
@@ -26,3 +26,13 @@ class PatientViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'list': [AllowAny],
         "destroy": [Role3],
     }
+    @action(
+        methods=["GET"],
+        detail=False,
+        url_path="detail_profile_patient"
+    )
+    def detailProfilePatient(self, request, *args, **kwargs):
+        patient = Patient.objects.get(user=request.user.id)
+        patientSerializer = PatientDetailSerializer(patient, many=True)
+        return Response(data=patientSerializer.data, status=status.HTTP_200_OK)
+

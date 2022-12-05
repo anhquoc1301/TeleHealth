@@ -2,6 +2,7 @@
 from authentication.models import User
 from rest_framework import serializers
 from .models import Patient
+from patient_management.models import PatientManagement
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -16,12 +17,17 @@ class PatientDetailSerializer(serializers.ModelSerializer):
             user=User.objects.get(id=instance.user.id)
             patientEmail = user.email
             patientPhone = user.phone
+            if PatientManagement.objects.get(patient_id=instance.id):
+                patientManagement = True
+            else:
+                patientManagement = False
         except:
             patientEmail = ''
             patientPhone = ''
 
         representation['email'] = patientEmail
         representation['phone'] = patientPhone
+        representation['patientManagement'] = patientManagement
 
         return representation
     class Meta:

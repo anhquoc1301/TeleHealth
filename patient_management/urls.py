@@ -18,4 +18,7 @@ urlpatterns = [
     path('remove_patient_management', views.PatientManagementViewSet.as_view({
         'post': 'removePatientManagement'
     })),
+    path('list_patient_by_doctor', views.PatientManagementViewSet.as_view({
+        'get': 'listPatientByDoctor'
+    })),
 ]

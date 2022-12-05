@@ -5,6 +5,7 @@ from patient.models import Patient
 from patient.serializers import PatientSerializer
 from rest_framework import serializers
 from .models import PatientManagement
+from authentication.models import User
 
 
 
@@ -34,9 +35,11 @@ class DoctorReadOnlyDoctorSerializer(serializers.ModelSerializer):
         try:
             doctor=Doctor.objects.get(id=instance.doctor.id)
             doctorInfo = DoctorSerializer(doctor).data
+            user=User.objects.get(id=doctor.user.id)
+            doctorInfo['email'] = user.email
+            doctorInfo['phone'] = user.phone
         except:
             doctorInfo = ""
-
         representation['doctor'] = doctorInfo
 
         return representation

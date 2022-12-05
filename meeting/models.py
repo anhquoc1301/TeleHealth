@@ -8,6 +8,8 @@ class Meeting(models.Model):
     meeting_time_start = models.DateTimeField()
     meeting_time_end = models.DateTimeField()
     meeting_content = models.CharField(max_length=200)
+    calendar_id = models.CharField(max_length=200)
+    calendar_url = models.CharField(max_length=200)
     meeting_url = models.CharField(max_length=200)
     conclusion = models.CharField(max_length=200, null=True)
     url_file = models.CharField(max_length=200, default='')
