@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'tlc',
     'upload',
     'tlc_result',
+    'notification'
 ]
 
 MIDDLEWARE = [

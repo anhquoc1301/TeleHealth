@@ -1,9 +1,11 @@
 from django.db import models
 from authentication.models import User
+import uuid
 
     # Create your models here.
 class Meeting(models.Model):
-    id = models.BigAutoField(primary_key=True, unique=True)
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     meeting_title = models.CharField(max_length=200)
     meeting_time_start = models.DateTimeField()
     meeting_time_end = models.DateTimeField()

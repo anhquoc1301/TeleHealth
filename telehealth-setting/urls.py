@@ -47,6 +47,7 @@ urlpatterns = [
     path('patient_management/', include('patient_management.urls')),
     path('tlc/', include('tlc.urls')),
     path('tlc_result/', include('tlc_result.urls')),
+    path('meeting/', include('meeting.urls')),
 
 
 

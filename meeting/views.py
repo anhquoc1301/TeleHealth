@@ -2,7 +2,7 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from pprint import pprint
-from Google import create_service, convert_to_RFC_datetime
+from .Google import create_service, convert_to_RFC_datetime
 
 from authentication.mixins import GetSerializerClassMixin
 from upload.serializers import FileSerializer
@@ -16,6 +16,7 @@ from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from authentication.permissions import Role1, Role1or3, Role2, Role3, Role4
+from notification.models import Notification
 
 class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     queryset = Meeting.objects.all()
@@ -26,88 +27,95 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'update': MeetingUpdateSerializer,
     }
     permission_classes_by_action = {
-        'list': [AllowAny],
-        "create": [permissions.IsAuthenticated],
-        "retrieve": [Role1|Role3],
+        'list': [Role3],
+        "create": [Role1],
         "update": [Role1],
-        "destroy": [Role3],
     }
 
     def create(self, request, *args, **kwargs):
         try:
             meetingData=request.data
             userId = request.user.id
-            serializer = self.get_serializer(data=meetingData)
-            if serializer.is_valid():
-                CLIENT_SECRET_FILE = './meeting/client_secret.json'
-                API_NAME = 'calendar'
-                API_VERSION = 'v3'
-                SCOPES = ['https://www.googleapis.com/auth/calendar']
+            userObject=User.objects.get(id=userId)
 
-                service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
-                # response=service.events().get(calendarId='primary', eventId='m62bgrmeroav9m84t69ing349o').execute()
-                # pprint(response)
-                calendar_id='telehealth_ibmelab@gmail.com'
-                house_adjustment= -8
-                even_request_body={
-                "start": {
-                    "dateTime": convert_to_RFC_datetime(2022, 11, 28, 12+house_adjustment, 30),
-                    "timeZone": 'Asia/Hanoi'
-                },
-                "end": {
-                    "dateTime": convert_to_RFC_datetime(2022, 11, 28, 14+house_adjustment, 30),
-                    "timeZone": 'Asia/Hanoi'
-                },
-                "conferenceData": {
-                        "createRequest": {
-                        "conferenceSolutionKey": {
-                            "type": "hangoutsMeet"
-                        },
-                        "requestId": "RandomString"
-                        }
-                },
-                "summary": meetingData['meeting_title'],
-                "description": meetingData['meeting_content'],
-                "colorId": 5,
-                "status": 'confirmed',
-                "attachments":meetingData['url_file'],
-                "attendees": meetingData['meeting_guest']
-                }
-                maxAttendees = 20
-                sendNotification= True
-                supportsAttachments=True
-                response = service.events().insert(
-                                calendarId=calendar_id,
-                                maxAttendees=maxAttendees,
-                                sendNotifications=sendNotification,
-                                supportsAttachments=supportsAttachments,
-                                body=even_request_body,
-                                conferenceDataVersion=1,
-                ).execute()
-                pprint(response)
-                meeting = Meeting.objects.create(
-                    meeting_title= meetingData['meeting_title'],
-                    meeting_time_start = meetingData['meeting_time_start'],
-                    meeting_time_end = meetingData['meeting_time_end'],
-                    meeting_content = meetingData['meeting_content'],
-                    meeting_url = response['hangoutLink'],
-                    calendar_url = response['htmlLink'],
-                    calendar_id = response['id'],
-                    url_file = meetingData['url_file'][0]['file_url'],
-                    meeting_creator_id=userId,
-                )
-                for meetingGuest in meetingData['meeting_guest']:
+            CLIENT_SECRET_FILE = './meeting/client_secret.json'
+            API_NAME = 'calendar'
+            API_VERSION = 'v3'
+            SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+            service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+  
+            calendar_id='telehealth.ibmelab@gmail.com'
+            house_adjustment= -8
+            start=meetingData['meeting_time_start']
+            end=meetingData['meeting_time_end']
+            even_request_body={
+            "start": {
+                "dateTime": convert_to_RFC_datetime(int(start[0:4]), int(start[5:7]), int(start[8:10]), int(start[11:13])+house_adjustment, int(start[14:16])),
+                "timeZone": 'Asia/Taipei'
+            },
+            "end": {
+                "dateTime": convert_to_RFC_datetime(int(end[0:4]), int(end[5:7]), int(end[8:10]), int(end[11:13])+house_adjustment, int(end[14:16])),
+                "timeZone": 'Asia/Taipei'
+            },
+            "conferenceData": {
+                    "createRequest": {
+                    "conferenceSolutionKey": {
+                        "type": "hangoutsMeet"
+                    },
+                    "requestId": "RandomString"
+                    }
+            },
+            "summary": meetingData['meeting_title'],
+            "description": meetingData['meeting_content'],
+            "colorId": 5,
+            "status": 'confirmed',
+            "attachments":meetingData['url_file'],
+            "attendees": meetingData['meeting_guest']
+            }
+            maxAttendees = 20
+            sendNotification= True
+            supportsAttachments=True
+            response = service.events().insert(
+                            calendarId=calendar_id,
+                            maxAttendees=maxAttendees,
+                            sendNotifications=sendNotification,
+                            supportsAttachments=supportsAttachments,
+                            body=even_request_body,
+                            conferenceDataVersion=1,
+            ).execute()
+            pprint(response)
+            meeting = Meeting.objects.create(
+                meeting_title= meetingData['meeting_title'],
+                meeting_time_start = meetingData['meeting_time_start'],
+                meeting_time_end = meetingData['meeting_time_end'],
+                meeting_content = meetingData['meeting_content'],
+                meeting_url = response['hangoutLink'],
+                calendar_url = response['htmlLink'],
+                calendar_id = response['id'],
+                url_file = meetingData['url_file'][0]['fileUrl'],
+                meeting_creator_id=userId,
+            )
+            for meetingGuest in meetingData['meeting_guest']:
+                guest=User.objects.filter(email=meetingGuest['email'])
+                if guest is not None:
                     meetingGuestOJ=MeetingGuest.objects.create(
-                        meeting_id=meeting.id,
-                        meeting_guest_email=meetingGuest['email'],
+                        meeting=meeting,
+                        meeting_guest=guest[0],
                     )
-                meetingSerializer = self.get_serializer(meeting)
-                return success(data=meetingSerializer.data)
+                    notification=Notification.objects.create(
+                        user=guest[0],
+                        content=f"You have a meeting invitation from {userObject.email}",
+                        linkId=meeting.id
+                    )
+            meetingSerializer = self.get_serializer(meeting)
+            return success(data=meetingSerializer.data)
         except:
             return error(data="Not valid data")
-    
+
     def update(self, request, *args, **kwargs):
         try:
+            emailUser=request.user.email
             meetingId = self.request.GET.get('pk')
             meetingData=request.data
             meeting=Meeting.objects.get(id=meetingId)
@@ -115,29 +123,74 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             meetingSerializer.is_valid(raise_exception=True)
             self.perform_update(meetingSerializer)
             meetingGuests= meetingData['guest']
-            for meetingGuest in meetingGuests:
-                meetingGuestOJ=MeetingGuest.objects.create(
-                        meeting_id=meeting.id,
-                        meeting_guest_email=meetingGuest['email'],
+            if meetingGuests !='null':
+                for meetingGuest in meetingGuests:
+                    guest=User.objects.filter(email=meetingGuest['email'])
+                    if guest is not None:
+                        meetingGuestOJ=MeetingGuest.objects.create(
+                            meeting=meeting,
+                            meeting_guest=guest[0],
+                        )
+                        notification=Notification.objects.create(
+                        user=guest[0],
+                        content=f"You have a meetings update from {emailUser}",
+                        linkId=meeting.id
                     )
-            start_datetime=convert_to_RFC_datetime(2022, 11, 28, 12-8, 30)
-            end_datetime=convert_to_RFC_datetime(2022, 11, 28, 12-8, 30)
-            dataCalendar=request.data
-            dataCalendar['start']['datetime']=start_datetime
-            dataCalendar['end']['datetime']=end_datetime
-            dataCalendar['description']=meetingData['meeting_content']
+            start=meetingData['meeting_time_start']
+            end=meetingData['meeting_time_end']
+            house_adjustment = -8
+            even_request_body={
+            "start": {
+                "dateTime": convert_to_RFC_datetime(int(start[0:4]), int(start[5:7]), int(start[8:10]), int(start[11:13])+house_adjustment, int(start[14:16])),
+                "timeZone": 'Asia/Taipei'
+            },
+            "end": {
+                "dateTime": convert_to_RFC_datetime(int(end[0:4]), int(end[5:7]), int(end[8:10]), int(end[11:13])+house_adjustment, int(end[14:16])),
+                "timeZone": 'Asia/Taipei'
+            },
+            "description": meetingData['meeting_content'],
+            "attendees": meetingData['guest'],
+            }
             CLIENT_SECRET_FILE = './meeting/client_secret.json'
             API_NAME = 'calendar'
             API_VERSION = 'v3'
             SCOPES = ['https://www.googleapis.com/auth/calendar']
-
             service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
-            service.events().update(
-                calendarId='telehealth_ibmelab@gmail.com',
+            request = service.events().update(
+                calendarId='telehealth.ibmelab@gmail.com',
                 eventId=meeting.calendar_id,
-                body=dataCalendar,
+                body=even_request_body,
             ).execute()
+            pprint(request)
             dataCalendarSerializer=MeetingReadOnlySerializer(meeting)
             return success(data=dataCalendarSerializer.data)
         except:
             return error('data not valid')
+    
+    def read(self, request, *args, **kwargs):
+        meetingId = self.request.GET.get('pk')
+        meeting = Meeting.objects.get(id=meetingId)
+        meetingSerializer = MeetingSerializer(instance=meeting)
+        return success(data=meetingSerializer.data)
+    
+    @action(
+        methods=["GET"],
+        detail=False,
+        url_path="list_meeting_missing_conclusion"
+    )
+    def listMeetingMissingConclusion(self, request, *args, **kwargs):
+        userId=request.user.id
+        meetings = Meeting.objects.filter(meeting_creator_id=userId, conclusion=None)
+        meetingSerializer = MeetingSerializer(meetings, many=True)
+        return success(data=meetingSerializer.data)
+
+    @action(
+        methods=["GET"],
+        detail=False,
+        url_path="list_meeting_for_user"
+    )
+    def listMeetingForUser(self, request, *args, **kwargs):
+        userId=request.user.id
+        meetings = Meeting.objects.filter(meeting_creator_id=userId)
+        meetingSerializer = MeetingSerializer(meetings, many=True)
+        return success(data=meetingSerializer.data)

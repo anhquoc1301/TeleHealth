@@ -7,7 +7,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 import django.contrib.auth.password_validation as validators
 from django.utils.translation import gettext_lazy as _
-
+from doctor.models import Doctor
+from patient.models import Patient
+from medical_unit.models import MedicalUnit
 class RegisterSerializer(serializers.ModelSerializer):
     password=serializers.CharField(max_length=50, min_length=6, write_only=True)
     role = serializers.CharField(max_length=30,required=True)
@@ -33,6 +35,8 @@ class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255, min_length=3, required=False)
     tokens = serializers.SerializerMethodField()
     role = serializers.CharField(max_length=30, required=False)
+    id = serializers.CharField(max_length=30, required=False)    
+    idProfile = serializers.CharField(max_length=30, required=False)
 
     def get_role(self, obj):
         user = User.objects.get(email=obj['email'])
@@ -64,12 +68,28 @@ class LoginSerializer(serializers.Serializer):
             raise AuthenticationFailed('Account disabled, contact admin')
         # if not user.is_verified:
         #     raise AuthenticationFailed('Email is not verified')
-
+        if user.role == 'role1':
+            try:
+                idProfile = Doctor.objects.get(user=user).id
+            except:
+                idProfile = None
+        if user.role == 'role2':
+            try:
+                idProfile = Patient.objects.get(user=user).id
+            except:
+                idProfile = None
+        if user.role == 'role3':
+            try:
+                idProfile = MedicalUnit.objects.get(user=user).id
+            except:
+                idProfile = None
         return {
             'email': user.email,
             'username': user.username,
             'role': user.role,
             't': user.tokens,
+            'id': user.id,
+            'idProfile': idProfile
 
         }
 

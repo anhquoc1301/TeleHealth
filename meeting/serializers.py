@@ -1,5 +1,6 @@
 from .models import MeetingGuest, Meeting
 from rest_framework import serializers
+from authentication.models import User
 class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
@@ -18,7 +19,15 @@ class MeetingReadOnlySerializer(serializers.ModelSerializer):
             meetingGuestData=MeetingGuestSerializer(meetingGuest, many=True).data
         except:
             meetingGuestData = ''
-
+        try:
+            user=User.objects.get(id=instance.meeting_creator.id)
+            creatorEmail=user.email
+            creatorPhone=user.phone
+        except:
+            creatorEmail=''
+            creatorPhone=''
+        representation['creatorEmail'] = creatorEmail
+        representation['creatorPhone'] = creatorPhone
         representation['meetingGuest'] = meetingGuestData
 
         return representation
