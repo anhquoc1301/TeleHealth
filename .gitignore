@@ -5,3 +5,4 @@ tlc/BCDU_net/
 *.pyc
 meeting/client_secret.json
 token files/
+mediafullimages_1.npy

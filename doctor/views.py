@@ -66,14 +66,14 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                     ward=request.data['ward']
                 )
                 doctor = Doctor.objects.create(
-                    user_id=user_id, 
-                    name=request.data['name'], 
+                    user_id=user_id,
+                    name=request.data['name'],
                     gender=request.data['gender'],
                     detail_address=request.data['detail_address'],
                     unsignedName=request.data['unsignedName'],
                     medicalUnit_id=request.data['medicalUnit'],
                     address=address)
-                doctorSerializer=DoctorSerializer(doctor)
+                doctorSerializer = DoctorSerializer(doctor)
                 return success(data=doctorSerializer.data)
 
         else:

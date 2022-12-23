@@ -13,6 +13,8 @@ from .utils2 import load_data
 from authentication.permissions import Role1, Role2, Role3, Role4, Role1or3
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
+
 class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     permission_classes = [AllowAny]
@@ -20,7 +22,7 @@ class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
     def post_file(self, request):
         request_user = request.user.id
-        patientId=request.data['patientId']
+        patientId = request.data['patientId']
         id = request.user.id
         if request.method == "POST":
             uploaded_files = request.FILES.getlist("uploadfiles")
@@ -31,9 +33,10 @@ class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             os.makedirs(Folder)
             # gauth = GoogleAuth()
             # drive = GoogleDrive(gauth)
-            userob=User.objects.get(id=request_user)
+            userob = User.objects.get(id=request_user)
             for uploaded_file in uploaded_files:
-                FileTLC(f_name=request_user, myfiles=uploaded_file, user=userob).save()
+                FileTLC(f_name=request_user,
+                        myfiles=uploaded_file, user=userob).save()
             for uploaded_file in uploaded_files:
                 uploaded_file_name = str(uploaded_file)
                 global server_store_path
@@ -87,16 +90,15 @@ class LoadFileViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                 'lung_volume': volume,
             }
             return success(data=context)
-   
+
     def get_result_by_patient_id(self, request):
-        patientId=self.request.GET.get('pk')
-        tlc=UserUploadedFile.objects.filter(patient_id=patientId)
-        tlcSerializer=UserUploadedFileSerializer(tlc, many=True)
+        patientId = self.request.GET.get('pk')
+        tlc = UserUploadedFile.objects.filter(patient_id=patientId)
+        tlcSerializer = UserUploadedFileSerializer(tlc, many=True)
         return success(data=tlcSerializer.data)
-    
+
     def detail_result(self, request):
-        userUploadFileId=self.request.GET.get('pk')
-        tlcResult=ResultFile.objects.get(upload_file_id=userUploadFileId)
-        tlcResultSerializer=ResultFileSerializer(tlcResult)
+        userUploadFileId = self.request.GET.get('pk')
+        tlcResult = ResultFile.objects.get(upload_file_id=userUploadFileId)
+        tlcResultSerializer = ResultFileSerializer(tlcResult)
         return success(data=tlcResultSerializer.data)
-    

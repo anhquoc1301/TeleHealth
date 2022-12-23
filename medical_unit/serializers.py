@@ -8,6 +8,7 @@ class MedicalUnitSerializer(serializers.ModelSerializer):
         model = MedicalUnit
         fields = '__all__'
 
+
 class PatientRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255, min_length=3)
     password = serializers.CharField(max_length=68, min_length=5)
@@ -17,7 +18,7 @@ class PatientRegisterSerializer(serializers.Serializer):
     gender = serializers.CharField(max_length=20)
     ethnic = serializers.CharField(max_length=50)
     unsignedName = serializers.CharField(max_length=50)
-    detail_address=serializers.CharField(max_length=255)
+    detail_address = serializers.CharField(max_length=255)
     dateOfBirth = serializers.DateField()
     insuranceCode = serializers.CharField(max_length=20)
     identification = serializers.CharField(max_length=20)

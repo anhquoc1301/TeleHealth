@@ -8,11 +8,12 @@ class ResultFileSerializer(serializers.ModelSerializer):
         model = ResultFile
         fields = '__all__'
 
+
 class UserUploadedFileSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:
-            resultFile=ResultFile.objects.get(upload_file_id=instance.id)
+            resultFile = ResultFile.objects.get(upload_file_id=instance.id)
             resultInfo = ResultFileSerializer(resultFile).data
         except:
             resultInfo = ""
@@ -20,6 +21,7 @@ class UserUploadedFileSerializer(serializers.ModelSerializer):
         representation['result'] = resultInfo
 
         return representation
+
     class Meta:
         model = UserUploadedFile
         fields = '__all__'

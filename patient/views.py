@@ -26,6 +26,7 @@ class PatientViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'list': [AllowAny],
         "destroy": [Role3],
     }
+
     @action(
         methods=["GET"],
         detail=False,
@@ -35,4 +36,3 @@ class PatientViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         patient = Patient.objects.get(user=request.user.id)
         patientSerializer = PatientDetailSerializer(patient, many=True)
         return Response(data=patientSerializer.data, status=status.HTTP_200_OK)
-

@@ -5,6 +5,7 @@ from authentication.models import User
 
 # Create your models here.
 
+
 class Address(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     country = models.CharField(max_length=200)

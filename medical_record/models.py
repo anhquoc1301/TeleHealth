@@ -4,11 +4,15 @@ from authentication.models import User
 from patient.models import Patient
 from upload.models import File
 
-    # Create your models here.
+# Create your models here.
+
+
 class MedicalRecord(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='medicalRecord')
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='medicalRecord')
+    creator = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='medicalRecord')
+    patient = models.ForeignKey(
+        Patient, on_delete=models.CASCADE, related_name='medicalRecord')
     patientInfo = models.CharField(max_length=255)
     result = models.CharField(max_length=255)
 
@@ -21,6 +25,7 @@ class MedicalRecord(models.Model):
 
     def __str__(self):
         return '{}'.format(self.patient)
+
 
 class FileMedicalRecord(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

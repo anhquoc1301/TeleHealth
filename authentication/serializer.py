@@ -10,20 +10,25 @@ from django.utils.translation import gettext_lazy as _
 from doctor.models import Doctor
 from patient.models import Patient
 from medical_unit.models import MedicalUnit
+
+
 class RegisterSerializer(serializers.ModelSerializer):
-    password=serializers.CharField(max_length=50, min_length=6, write_only=True)
-    role = serializers.CharField(max_length=30,required=True)
+    password = serializers.CharField(
+        max_length=50, min_length=6, write_only=True)
+    role = serializers.CharField(max_length=30, required=True)
 
     class Meta:
-        model =User
-        fields = ['email', 'password', 'username', 'phone' ,'role']
+        model = User
+        fields = ['email', 'password', 'username', 'phone', 'role']
 
     def validate(self, attrs):
-        email = attrs.get('email','')
-        username = attrs.get('username','')
+        email = attrs.get('email', '')
+        username = attrs.get('username', '')
         if not username.isalnum():
-            raise serializers.ValidationError('username includes both letters and numbers')
+            raise serializers.ValidationError(
+                'username includes both letters and numbers')
         return attrs
+
     def create(self, validated_data):
         print(validated_data)
         return User.objects.create_user(**validated_data)
@@ -31,11 +36,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255, min_length=3)
-    password = serializers.CharField(max_length=68, min_length=6, write_only=True)
-    username = serializers.CharField(max_length=255, min_length=3, required=False)
+    password = serializers.CharField(
+        max_length=68, min_length=6, write_only=True)
+    username = serializers.CharField(
+        max_length=255, min_length=3, required=False)
     tokens = serializers.SerializerMethodField()
     role = serializers.CharField(max_length=30, required=False)
-    id = serializers.CharField(max_length=30, required=False)    
+    id = serializers.CharField(max_length=30, required=False)
     idProfile = serializers.CharField(max_length=30, required=False)
 
     def get_role(self, obj):
@@ -95,8 +102,6 @@ class LoginSerializer(serializers.Serializer):
 
         return super().validate(attrs)
 
-
-
     # class Meta:
     #     model = User
     #     fields = ['email', 'password', 'username', 'token']
@@ -120,13 +125,12 @@ class LogoutSerializer(serializers.ModelSerializer):
             RefreshToken(self.token).blacklist()
         except TokenError:
             self.fail('invalid')
-        except :
+        except:
             return "Token is expired or invalid"
 
     class Meta:
         model = User
-        fields = [ 'refresh', 'tokens']
-
+        fields = ['refresh', 'tokens']
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -155,6 +159,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 class GetUserReadOnlySerializer(serializers.Serializer):
     email = serializers.CharField(read_only=True)
     fullname = serializers.CharField(read_only=True)
+
 
 class DoctorRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255, min_length=3)

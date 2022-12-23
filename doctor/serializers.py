@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 from .models import Doctor
-from authentication.models import User 
+from authentication.models import User
 from address.models import Address
 from address.serializers import AddressSerializer
 
@@ -10,10 +10,10 @@ class DoctorSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:
-            user=User.objects.get(id=instance.user.id)
+            user = User.objects.get(id=instance.user.id)
             doctorEmail = user.email
             doctorPhone = user.phone
-            address=Address.objects.get(id=instance.address.id)
+            address = Address.objects.get(id=instance.address.id)
             doctorAddress = AddressSerializer(instance=address).data
         except:
             doctorEmail = ''
@@ -25,16 +25,18 @@ class DoctorSerializer(serializers.ModelSerializer):
         representation['address'] = doctorAddress
 
         return representation
+
     class Meta:
         model = Doctor
         fields = '__all__'
 
+
 class DoctorUpdateSerializer(serializers.ModelSerializer):
-    phone=serializers.CharField(max_length=15)
-    country=serializers.CharField(max_length=40)
-    province=serializers.CharField(max_length=40)
-    district=serializers.CharField(max_length=40)
-    ward=serializers.CharField(max_length=40)
+    phone = serializers.CharField(max_length=15)
+    country = serializers.CharField(max_length=40)
+    province = serializers.CharField(max_length=40)
+    district = serializers.CharField(max_length=40)
+    ward = serializers.CharField(max_length=40)
 
     class Meta:
         model = Doctor

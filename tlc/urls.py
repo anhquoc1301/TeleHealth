@@ -9,7 +9,7 @@ router.register("", LoadFileViewSet, "load_file")
 
 urlpatterns = [
     path('', include(router.urls)),
-    
+
     path('get_result_by_patient_id', LoadFileViewSet.as_view({
         'get': 'get_result_by_patient_id'
     })),

@@ -22,7 +22,7 @@ class Doctor(models.Model):
         MedicalUnit, on_delete=models.CASCADE, related_name='doctor')
     address = models.ForeignKey(
         Address, on_delete=models.CASCADE, related_name='doctor')
-    detail_address=models.CharField(max_length=200)
+    detail_address = models.CharField(max_length=200)
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="doctor")
 

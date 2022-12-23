@@ -25,7 +25,7 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     serializer_class = MedicalRecordSerializer
     serializer_action_classes = {
         'detail_medical_record': MedicalRecordReadOnlyPatientSerializer,
-        'update_medical_record' : UpdateMedicalRecordSerializer,
+        'update_medical_record': UpdateMedicalRecordSerializer,
     }
     permission_classes_by_action = {
         'list': [Role3],
@@ -35,11 +35,12 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     def create(self, request):
         try:
             medicalRecordData = request.data
-            medicalRecordData=medicalRecordData.dict()
-            medicalRecordData['creator']=str(request.user.id)
-            medicalRecordSerializer = self.get_serializer(data=medicalRecordData)
+            medicalRecordData = medicalRecordData.dict()
+            medicalRecordData['creator'] = str(request.user.id)
+            medicalRecordSerializer = self.get_serializer(
+                data=medicalRecordData)
             medicalRecordSerializer.is_valid(raise_exception=True)
-            medicalRecord=medicalRecordSerializer.save()
+            medicalRecord = medicalRecordSerializer.save()
             files = self.request.FILES.getlist('files', None)
             if files:
                 for file in files:
@@ -51,21 +52,24 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                     image_serializer = FileSerializer(data=data_file)
                     image_serializer.is_valid(raise_exception=True)
                     file = image_serializer.save()
-                    FileMedicalRecord.objects.create(file_id=file.id, medicalRecord_id=medicalRecord.id)
+                    FileMedicalRecord.objects.create(
+                        file_id=file.id, medicalRecord_id=medicalRecord.id)
             return success(data=medicalRecordSerializer)
         except:
             return error(data="data not valid")
 
     def list_medical_record_by_patientId(self, request, *args, **kwargs):
         patientId = self.request.GET.get('pk')
-        medicalRecords=MedicalRecord.objects.filter(patient_id=patientId)
-        medicalRecordsSerializer = self.get_serializer(medicalRecords, many=True)
+        medicalRecords = MedicalRecord.objects.filter(patient_id=patientId)
+        medicalRecordsSerializer = self.get_serializer(
+            medicalRecords, many=True)
         return success(data=medicalRecordsSerializer.data)
-    
+
     def delete_file_medical_record(self, request, *args, **kwargs):
         try:
             fileMedicalRecordId = self.request.GET.get('pk')
-            fileMedicalRecord=FileMedicalRecord.objects.get(id=fileMedicalRecordId)
+            fileMedicalRecord = FileMedicalRecord.objects.get(
+                id=fileMedicalRecordId)
             fileMedicalRecord.delete()
             return success(data='delete success!')
         except:
@@ -73,15 +77,16 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
     def detail_medical_record(self, request, *args, **kwargs):
         medicalRecordId = self.request.GET.get('pk')
-        medicalRecord=MedicalRecord.objects.get(id=medicalRecordId)
+        medicalRecord = MedicalRecord.objects.get(id=medicalRecordId)
         medicalRecordSerializer = self.get_serializer(medicalRecord)
         return success(data=medicalRecordSerializer.data)
 
     def update_medical_record(self, request, *args, **kwargs):
         try:
             medicalRecordId = self.request.GET.get('pk')
-            medicalRecord=MedicalRecord.objects.get(id=medicalRecordId)
-            medicalRecordSerializer = self.get_serializer(instance=medicalRecord, data=request.data)
+            medicalRecord = MedicalRecord.objects.get(id=medicalRecordId)
+            medicalRecordSerializer = self.get_serializer(
+                instance=medicalRecord, data=request.data)
             medicalRecordSerializer.is_valid(raise_exception=True)
             self.perform_update(medicalRecordSerializer)
             files = self.request.FILES.getlist('files', None)
@@ -95,7 +100,8 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                     image_serializer = FileSerializer(data=data_file)
                     image_serializer.is_valid(raise_exception=True)
                     file = image_serializer.save()
-                    FileMedicalRecord.objects.create(file_id=file.id, medicalRecord_id=medicalRecordId)
+                    FileMedicalRecord.objects.create(
+                        file_id=file.id, medicalRecord_id=medicalRecordId)
             medicalRecordSerializer = self.get_serializer(medicalRecord)
             return success(data=medicalRecordSerializer.data)
         except:

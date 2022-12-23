@@ -8,17 +8,17 @@ from .models import PatientManagement
 from authentication.models import User
 
 
-
 class PatientManagementSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientManagement
         fields = '__all__'
 
+
 class PatientReadOnlyDoctorSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:
-            patient=Patient.objects.get(id=instance.patient.id)
+            patient = Patient.objects.get(id=instance.patient.id)
             patientInfo = PatientSerializer(patient).data
         except:
             patientInfo = ""
@@ -26,16 +26,19 @@ class PatientReadOnlyDoctorSerializer(serializers.ModelSerializer):
         representation['patient'] = patientInfo
 
         return representation
+
     class Meta:
         model = PatientManagement
         fields = '__all__'
+
+
 class DoctorReadOnlyDoctorSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:
-            doctor=Doctor.objects.get(id=instance.doctor.id)
+            doctor = Doctor.objects.get(id=instance.doctor.id)
             doctorInfo = DoctorSerializer(doctor).data
-            user=User.objects.get(id=doctor.user.id)
+            user = User.objects.get(id=doctor.user.id)
             doctorInfo['email'] = user.email
             doctorInfo['phone'] = user.phone
         except:
@@ -43,6 +46,7 @@ class DoctorReadOnlyDoctorSerializer(serializers.ModelSerializer):
         representation['doctor'] = doctorInfo
 
         return representation
+
     class Meta:
         model = PatientManagement
         fields = '__all__'
