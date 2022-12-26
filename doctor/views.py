@@ -78,3 +78,9 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
         else:
             raise Exception('not valid')
+
+    def detailDoctor(self, request, *args, **kwargs):
+        doctorId = self.request.GET.get('pk')
+        doctor = Doctor.objects.get(id=doctorId)
+        doctorSerializer = DoctorSerializer(doctor)
+        return Response(data=doctorSerializer.data, status=status.HTTP_200_OK)
