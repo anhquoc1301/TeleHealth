@@ -33,7 +33,8 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     queryset = MedicalUnit.objects.all()
     permission_classes = [Role3]
     permission_classes_by_action = {
-        'detailPatientByMedicalUnit': [Role1or3]
+        'detailPatientByMedicalUnit': [Role1or3],
+        'list': [permissions.AllowAny]
     }
     serializer_class = MedicalUnitSerializer
     serializer_action_classes = {

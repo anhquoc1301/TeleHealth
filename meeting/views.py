@@ -31,6 +31,10 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         'list': [Role3],
         "create": [Role1],
         "update": [Role1],
+        "listMeetingMissingConclusion": [Role1],
+        "listMeetingCreatorForUser": [Role1],
+        "addMeetingConclusion": [Role1],
+
     }
 
     def create(self, request, *args, **kwargs):
@@ -54,11 +58,11 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             even_request_body = {
                 "start": {
                     "dateTime": convert_to_RFC_datetime(int(start[0:4]), int(start[5:7]), int(start[8:10]), int(start[11:13])+house_adjustment, int(start[14:16])),
-                    "timeZone": 'Asia/Taipei'
+                    "timeZone": 'Asia/Ho_Chi_Minh'
                 },
                 "end": {
                     "dateTime": convert_to_RFC_datetime(int(end[0:4]), int(end[5:7]), int(end[8:10]), int(end[11:13])+house_adjustment, int(end[14:16])),
-                    "timeZone": 'Asia/Taipei'
+                    "timeZone": 'Asia/Ho_Chi_Minh'
                 },
                 "conferenceData": {
                     "createRequest": {
@@ -145,11 +149,11 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             even_request_body = {
                 "start": {
                     "dateTime": convert_to_RFC_datetime(int(start[0:4]), int(start[5:7]), int(start[8:10]), int(start[11:13])+house_adjustment, int(start[14:16])),
-                    "timeZone": 'Asia/Taipei'
+                    "timeZone": 'Asia/Ho_Chi_Minh'
                 },
                 "end": {
                     "dateTime": convert_to_RFC_datetime(int(end[0:4]), int(end[5:7]), int(end[8:10]), int(end[11:13])+house_adjustment, int(end[14:16])),
-                    "timeZone": 'Asia/Taipei'
+                    "timeZone": 'Asia/Ho_Chi_Minh'
                 },
                 "description": meetingData['meeting_content'],
                 "attendees": meetingData['guest'],

@@ -94,7 +94,7 @@ class LoginSerializer(serializers.Serializer):
             'email': user.email,
             'username': user.username,
             'role': user.role,
-            't': user.tokens,
+            'tokens': user.tokens,
             'id': user.id,
             'idProfile': idProfile
 
