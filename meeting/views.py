@@ -210,7 +210,7 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     def listMeetingCreatorForUser(self, request, *args, **kwargs):
         userId = request.user.id
         meetings = Meeting.objects.filter(meeting_creator_id=userId)
-        meetingSerializer = MeetingSerializer(meetings, many=True)
+        meetingSerializer = MeetingReadOnlySerializer(meetings, many=True)
         return success(data=meetingSerializer.data)
 
     @action(

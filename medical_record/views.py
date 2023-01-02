@@ -54,7 +54,7 @@ class MedicalRecordViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                     file = image_serializer.save()
                     FileMedicalRecord.objects.create(
                         file_id=file.id, medicalRecord_id=medicalRecord.id)
-            return success(data=medicalRecordSerializer)
+            return success(data=medicalRecordSerializer.data)
         except:
             return error(data="data not valid")
 
