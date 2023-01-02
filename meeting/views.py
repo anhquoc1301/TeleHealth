@@ -129,6 +129,7 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
                 instance=meeting, data=meetingData)
             meetingSerializer.is_valid(raise_exception=True)
             self.perform_update(meetingSerializer)
+            MeetingGuest.objects.filter(meeting_id=meetingId).delete()
             meetingGuests = meetingData['guest']
             if meetingGuests != 'null':
                 for meetingGuest in meetingGuests:

@@ -25,7 +25,7 @@ class MeetingSerializer(serializers.ModelSerializer):
 class MeetingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
-        fields = ['meeting_time_start', 'meeting_time_end', 'meeting_content']
+        fields = ['meeting_time_start', 'meeting_time_end', 'meeting_content', 'meeting_title']
 
 
 class MeetingReadOnlySerializer(serializers.ModelSerializer):
