@@ -104,7 +104,7 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             )
             for meetingGuest in meetingData['meeting_guest']:
                 guest = User.objects.filter(email=meetingGuest['email'])
-                if guest is not None:
+                if len(guest)==1:
                     meetingGuestOJ = MeetingGuest.objects.create(
                         meeting=meeting,
                         meeting_guest=guest[0],
@@ -133,7 +133,7 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
             if meetingGuests != 'null':
                 for meetingGuest in meetingGuests:
                     guest = User.objects.filter(email=meetingGuest['email'])
-                    if guest is not None:
+                    if len(guest)==1:
                         meetingGuestOJ = MeetingGuest.objects.create(
                             meeting=meeting,
                             meeting_guest=guest[0],
