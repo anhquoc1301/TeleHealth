@@ -7,7 +7,7 @@ from .Google import create_service, convert_to_RFC_datetime
 from authentication.mixins import GetSerializerClassMixin
 from upload.serializers import FileSerializer
 from .models import Meeting, MeetingGuest
-from .serializers import MeetingGuestSerializer, MeetingSerializer, MeetingReadOnlySerializer, MeetingUpdateSerializer
+from .serializers import MeetingGuestSerializer, MeetingSerializer, MeetingReadOnlySerializer, MeetingUpdateSerializer, MeetingReadOnlyCreatorSerializer
 from rest_framework import generics, status, permissions
 from base.message import success, error
 
@@ -210,7 +210,7 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     def listMeetingCreatorForUser(self, request, *args, **kwargs):
         userId = request.user.id
         meetings = Meeting.objects.filter(meeting_creator_id=userId)
-        meetingSerializer = MeetingReadOnlySerializer(meetings, many=True)
+        meetingSerializer = MeetingReadOnlyCreatorSerializer(meetings, many=True)
         return success(data=meetingSerializer.data)
 
     @action(
