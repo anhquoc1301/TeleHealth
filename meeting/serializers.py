@@ -4,6 +4,19 @@ from authentication.models import User
 
 
 class MeetingSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        try:
+            meetingGuest = MeetingGuest.objects.filter(meeting_id=instance.id)
+            meetingGuestData = MeetingGuestSerializer(
+                meetingGuest, many=True).data
+        except:
+            meetingGuestData = ''
+        representation['meeting_guest'] = meetingGuestData
+
+        return representation
+
     class Meta:
         model = Meeting
         fields = '__all__'
@@ -47,16 +60,18 @@ class MeetingGuestSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:
-            meetingGuest = User.objects.get(meeting_guest__meeting_guest_id=instance.id)
+            meetingGuest = User.objects.get(meeting_guest__id=instance.id)
             meetingGuestData = meetingGuest.email
         except:
             meetingGuestData = ''
         representation['meeting_guest_email'] = meetingGuestData
 
         return representation
+
     class Meta:
         model = MeetingGuest
         fields = '__all__'
+
 
 class MeetingReadOnlyCreatorSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):

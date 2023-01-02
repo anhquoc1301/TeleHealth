@@ -178,7 +178,7 @@ class MeetingViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     def read(self, request, *args, **kwargs):
         meetingId = self.request.GET.get('pk')
         meeting = Meeting.objects.get(id=meetingId)
-        meetingSerializer = MeetingSerializer(instance=meeting)
+        meetingSerializer = MeetingReadOnlySerializer(instance=meeting)
         return success(data=meetingSerializer.data)
 
     def addMeetingConclusion(self, request, *args, **kwargs):
