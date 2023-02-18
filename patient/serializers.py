@@ -5,6 +5,7 @@ from .models import Patient
 from patient_management.models import PatientManagement
 from address.models import Address
 from address.serializers import AddressSerializer
+from doctor.models import Doctor
 
 
 class PatientSerializer(serializers.ModelSerializer):
@@ -15,7 +16,7 @@ class PatientSerializer(serializers.ModelSerializer):
 class DoctorIdPatientManagementSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientManagement
-        fields = 'doctor'
+        fields = '__all__'
 
 class PatientDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):

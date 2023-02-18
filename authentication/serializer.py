@@ -90,6 +90,8 @@ class LoginSerializer(serializers.Serializer):
                 idProfile = MedicalUnit.objects.get(user=user).id
             except:
                 idProfile = None
+        if user.role == 'role4':
+            idProfile = None
         return {
             'email': user.email,
             'username': user.username,

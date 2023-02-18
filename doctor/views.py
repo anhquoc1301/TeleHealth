@@ -16,6 +16,7 @@ from authentication.models import User
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
+from medical_unit.models import MedicalUnit
 
 
 class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
@@ -81,6 +82,9 @@ class DoctorViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
     def detailDoctor(self, request, *args, **kwargs):
         doctorId = self.request.GET.get('pk')
+        medicalUnitId=request.data['id'],
         doctor = Doctor.objects.get(id=doctorId)
-        doctorSerializer = DoctorSerializer(doctor)
-        return Response(data=doctorSerializer.data, status=status.HTTP_200_OK)
+        medicalUnit=MedicalUnit.objects.get(id=medicalUnitId)
+        doctor.medicalUnit=medicalUnit
+        doctor.save()
+        return Response(data="success", status=status.HTTP_200_OK)

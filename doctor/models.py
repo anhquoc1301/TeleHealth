@@ -19,7 +19,7 @@ class Doctor(models.Model):
     unsignedName = models.CharField(max_length=200)
     is_accept = models.BooleanField(default=False)
     medicalUnit = models.ForeignKey(
-        MedicalUnit, on_delete=models.CASCADE, related_name='doctor')
+        MedicalUnit, on_delete=models.CASCADE, related_name='doctor', blank=True, null=True)
     address = models.ForeignKey(
         Address, on_delete=models.CASCADE, related_name='doctor')
     detail_address = models.CharField(max_length=200)
