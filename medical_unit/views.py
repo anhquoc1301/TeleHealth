@@ -182,6 +182,9 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
 
     def deleteDoctorWaitAcceptByMedicalUnit(self, request, *args, **kwargs):
         doctorId = self.request.GET.get('pk')
+        medicalUnitId=request.data['id'],
         doctor = Doctor.objects.get(id=doctorId)
-        doctor.delete()
+        medicalUnit=MedicalUnit.objects.get(id=medicalUnitId)
+        doctor.medicalUnit=medicalUnit
+        doctor.save()
         return Response(data="success", status=status.HTTP_200_OK)
