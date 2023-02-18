@@ -19,4 +19,7 @@ urlpatterns = [
     path('accept_doctor_wait_accept_by_medical_unit', MedicalUnitViewSet.as_view({
         'post': 'acceptDoctorWaitAcceptByMedicalUnit'
     })),
+    path('delete_doctor_wait_accept_by_medical_unit', MedicalUnitViewSet.as_view({
+        'post': 'deleteDoctorWaitAcceptByMedicalUnit'
+    })),
 ]

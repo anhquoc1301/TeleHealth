@@ -12,6 +12,10 @@ class PatientSerializer(serializers.ModelSerializer):
         model = Patient
         fields = '__all__'
 
+class DoctorIdPatientManagementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientManagement
+        fields = 'doctor'
 
 class PatientDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
@@ -22,8 +26,11 @@ class PatientDetailSerializer(serializers.ModelSerializer):
             patientPhone = user.phone
             if PatientManagement.objects.filter(patient_id=instance.id):
                 patientManagement = True
+                patientManagements = PatientManagement.objects.filter(patient_id=instance.id)
+                patientManagementDoctorId = DoctorIdPatientManagementSerializer(instance=patientManagements, many=True).data
             else:
                 patientManagement = False
+                patientManagementDoctorId = ''
             address = Address.objects.get(id=instance.address.id)
             patientAddress = AddressSerializer(instance=address).data
         except:
@@ -35,6 +42,7 @@ class PatientDetailSerializer(serializers.ModelSerializer):
         representation['phone'] = patientPhone
         representation['address'] = patientAddress
         representation['patientManagement'] = patientManagement
+        representation['patientManagementDoctorId'] = patientManagementDoctorId
 
         return representation
 

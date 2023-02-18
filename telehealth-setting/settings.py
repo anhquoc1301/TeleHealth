@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'tlc',
     'upload',
     'tlc_result',
-    'notification'
+    'notification',
+    'pc',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +72,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'telehealth-setting.urls'
+
+APPEND_SLASH=False
 
 TEMPLATES = [
     {

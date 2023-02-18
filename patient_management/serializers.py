@@ -2,7 +2,7 @@
 from doctor.models import Doctor
 from doctor.serializers import DoctorSerializer
 from patient.models import Patient
-from patient.serializers import PatientDetailSerializer, PatientSerializer
+from patient.serializers import PatientDetailSerializer
 from rest_framework import serializers
 from .models import PatientManagement
 from authentication.models import User
@@ -12,7 +12,6 @@ class PatientManagementSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientManagement
         fields = '__all__'
-
 
 class PatientReadOnlyDoctorSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):

@@ -179,3 +179,9 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         doctor.is_accept = True if doctor.is_accept == False else False
         doctor.save()
         return Response(data=doctor.is_accept, status=status.HTTP_200_OK)
+
+    def deleteDoctorWaitAcceptByMedicalUnit(self, request, *args, **kwargs):
+        doctorId = self.request.GET.get('pk')
+        doctor = Doctor.objects.get(id=doctorId)
+        doctor.delete()
+        return Response(data="success", status=status.HTTP_200_OK)

@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import ResultFile, UserUploadedFile
+from .models import ResultFile, UserUploadedFile, FileTLC
 
 
 class ResultFileSerializer(serializers.ModelSerializer):
@@ -24,4 +24,9 @@ class UserUploadedFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserUploadedFile
+        fields = '__all__'
+
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileTLC
         fields = '__all__'

@@ -48,6 +48,7 @@ urlpatterns = [
     path('tlc_result/', include('tlc_result.urls')),
     path('meeting/', include('meeting.urls')),
     path('notification/', include('notification.urls')),
+    path('pc/', include('pc.urls')),
 
 
 
