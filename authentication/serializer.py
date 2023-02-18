@@ -1,5 +1,3 @@
-from address.serializers import AddressSerializer
-from medical_unit.serializers import MedicalUnitSerializer
 from rest_framework import serializers
 from .models import User
 from django.contrib import auth

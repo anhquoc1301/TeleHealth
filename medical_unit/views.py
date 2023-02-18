@@ -14,7 +14,7 @@ from django.db.models import Q
 
 from authentication.mixins import GetSerializerClassMixin
 from .models import MedicalUnit
-from .serializers import MedicalUnitSerializer, PatientRegisterSerializer
+from .serializers import MedicalUnitSerializer, PatientRegisterSerializer, MedicalUnitCreateSerializer
 from rest_framework import generics, status, permissions
 from base.message import success, error
 
@@ -33,28 +33,46 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     queryset = MedicalUnit.objects.all()
     permission_classes = [Role3]
     permission_classes_by_action = {
+        'create': [Role4],
         'detailPatientByMedicalUnit': [Role1or3],
         'list': [permissions.AllowAny]
     }
     serializer_class = MedicalUnitSerializer
     serializer_action_classes = {
+        'create': MedicalUnitCreateSerializer,
         'addPatientByMedicalUnit': PatientRegisterSerializer,
         'updatePatientByMedicalUnit': PatientUpdateByMedicalUnitSerializer,
     }
 
     def create(self, request):
-        userData = request.data['user']
-        medicalData = request.data['medical']
-        userSerializer = RegisterSerializer(data=userData)
-        if userSerializer.is_valid():
-            newUser = User.objects.create_user(
-                email=userData['email'], password=userData['password'], username=userData['username'], phone=userData['phone'], Role=userData['Role'])
-            medicalData['user'] = newUser.id
-            medicalSerializer = self.get_serializer(data=medicalData)
-            if medicalSerializer.is_valid():
-                medicalSerializer.save()
-                return success(data=medicalSerializer.data)
-        return error()
+        medicalData = request.data
+        serializer = self.get_serializer(data=medicalData)
+        if serializer.is_valid():
+            user = User.objects.create_user(
+                email=medicalData['email'],
+                password=medicalData['password'],
+                username=medicalData['username'],
+                phone=medicalData['phone'],
+                role='role3',
+            )
+            address = Address.objects.create(
+                country=medicalData['country'],
+                province=medicalData['province'],
+                district=medicalData['district'],
+                ward=medicalData['ward'],
+            )
+            medicalUnit = MedicalUnit.objects.create(
+                name=medicalData['name'],
+                unsignedName=medicalData['unsignedName'],
+                detail_address=medicalData['detail_address'],
+                description=medicalData['description'],
+                address_id=address.id,
+                user_id=user.id,
+            )
+            medicalUnitSerializer = MedicalUnitSerializer(medicalUnit)
+            return success(data=medicalUnitSerializer.data)
+        return error(data='data not valid')
+        
 
     @action(
         methods=["POST"],
