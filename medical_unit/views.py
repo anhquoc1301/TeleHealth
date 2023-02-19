@@ -34,6 +34,7 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
     permission_classes = [Role3]
     permission_classes_by_action = {
         'create': [Role4],
+        'detailMedicalUnit': [permissions.AllowAny],
         'detailPatientByMedicalUnit': [Role1or3],
         'list': [permissions.AllowAny]
     }
@@ -206,3 +207,9 @@ class MedicalUnitViewSet(GetSerializerClassMixin, viewsets.ModelViewSet):
         doctor.medicalUnit=medicalUnit
         doctor.save()
         return Response(data="success", status=status.HTTP_200_OK)
+
+    def detailMedicalUnit(self, request, *args, **kwargs):
+        medicalUnitId = self.request.GET.get('pk')
+        medicalUnit=MedicalUnit.objects.get(id=medicalUnitId)
+        medicalUnitSerializer = self.get_serializer(medicalUnit)
+        return success(data=medicalUnitSerializer.data)

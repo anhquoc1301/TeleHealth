@@ -1,9 +1,26 @@
 
 from rest_framework import serializers
 from .models import MedicalUnit
+from authentication.models import User
 
 
 class MedicalUnitSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        try:
+            user = User.objects.get(
+                id=instance.user.id)
+            email = user.email
+            phone = user.phone
+        except:
+            email = ''
+            phone = ''
+
+        representation['email'] = email
+        representation['phone'] = phone
+
+        return representation
     class Meta:
         model = MedicalUnit
         fields = '__all__'
